@@ -77,7 +77,7 @@ class UploadSettings:
     """
 
     UPLOAD_PREFIX = '/profile'
-    UPLOAD_PATH = 'vf_admin/upload_path'
+    UPLOAD_PATH = 'flux_admin/upload_path'
     UPLOAD_MACHINE = 'A'
     DEFAULT_ALLOWED_EXTENSION = [
         # 图片
@@ -108,7 +108,7 @@ class UploadSettings:
         # pdf
         'pdf',
     ]
-    DOWNLOAD_PATH = 'vf_admin/download_path'
+    DOWNLOAD_PATH = 'flux_admin/download_path'
 
     def __init__(self):
         if not os.path.exists(self.UPLOAD_PATH):

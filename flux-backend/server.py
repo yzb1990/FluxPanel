@@ -1,5 +1,7 @@
 from contextlib import asynccontextmanager
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from starlette.responses import JSONResponse
+
 from config.env import AppConfig
 from config.get_db import init_create_table
 from config.get_redis import RedisUtil
@@ -11,6 +13,9 @@ from router import router_manager
 from sub_applications.handle import handle_sub_applications
 from utils.common_util import worship
 from utils.log_util import logger
+from fastapi import FastAPI, Request
+
+from utils.response_util import ResponseUtil
 
 
 # 生命周期事件
@@ -37,6 +42,17 @@ app = FastAPI(
     lifespan=lifespan,
     root_path=AppConfig.app_root_path,
 )
+
+
+# 定义中间件
+@app.middleware("http")
+async def block_post_requests(request: Request, call_next):
+    # 检查请求方法是否为 POST
+    if request.url.path not in ("/logout", "/login") and request.method in ("POST", "PUT", "PATCH", "DELETE"):
+        return ResponseUtil.error(msg="演示环境，暂不允许修改数据")
+    # 继续处理其他请求
+    response = await call_next(request)
+    return response
 
 
 # 加载中间件处理方法

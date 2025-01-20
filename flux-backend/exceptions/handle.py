@@ -19,6 +19,7 @@ def handle_exception(app: FastAPI):
     """
 
     # 自定义token检验异常
+
     @app.exception_handler(AuthException)
     async def auth_exception_handler(request: Request, exc: AuthException):
         return ResponseUtil.unauthorized(data=exc.data, msg=exc.message)
@@ -65,7 +66,12 @@ def handle_exception(app: FastAPI):
         )
 
     @app.exception_handler(404)
-    async def http_exception_handler(request: Request, exc: HTTPException):
+    async def http_404_exception_handler(request: Request, exc: HTTPException):
+        return JSONResponse(
+            content=jsonable_encoder({'code': exc.status_code, 'msg': exc.detail}), status_code=exc.status_code
+        )
+    @app.exception_handler(405)
+    async def http_405_exception_handler(request: Request, exc: HTTPException):
         return JSONResponse(
             content=jsonable_encoder({'code': exc.status_code, 'msg': exc.detail}), status_code=exc.status_code
         )
