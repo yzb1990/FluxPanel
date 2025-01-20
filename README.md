@@ -25,8 +25,10 @@ FluxPanel是一套全部开源的快速开发平台，毫无保留给个人及�
 ## 在线体验地址
 
 [FluxPanel](https://fluxpanel.igiggle.cn.com)
-name: admin
-pwd: admin123
+
+用户名: admin
+
+密码: admin123
 
 ## 内置功能
 
