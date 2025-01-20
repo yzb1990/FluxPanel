@@ -1,0 +1,12 @@
+# -*- coding:utf-8 -*-
+
+from sqlalchemy import Column, ForeignKey, {{ columns_imports }}
+from config.database import BaseMixin, Base
+
+
+class {{ table_name|snake_to_pascal_case }}(Base, BaseMixin):
+    __tablename__ = "{{ table_name }}"
+    {% for column in columns %}
+    {% if not column.is_base_column %}{{ column.name }} = Column({{ column.type }}{% if column.options %}, {{ column.options }}{% endif %}){% endif %}
+    {% endfor %}
+

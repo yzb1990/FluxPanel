@@ -1,0 +1,67 @@
+# -*- coding:utf-8 -*-
+
+from fastapi import APIRouter, Depends
+from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.requests import Request
+from config.enums import BusinessType
+from config.get_db import get_db
+from module_admin.service.login_service import LoginService
+from module_admin.aspect.data_scope import GetDataScope
+from module_admin.aspect.interface_auth import CheckUserInterfaceAuth
+from module_admin.entity.vo.user_vo import CurrentUserModel
+from module_admin.annotation.log_annotation import Log
+from utils.response_util import ResponseUtil
+
+from {{ module_name }}.entity.vo.{{ table_name }}_vo import {{ table_name|snake_to_pascal_case }}PageModel, {{ table_name|snake_to_pascal_case }}Model
+from {{ module_name }}.service.{{ table_name }}_service import {{ table_name|snake_to_pascal_case }}Service
+
+{{ table_name|snake_to_camel }}Controller = APIRouter(prefix='/{{ table_name }}', dependencies=[Depends(LoginService.get_current_user)])
+
+
+@{{ table_name|snake_to_camel }}Controller.get('/list', dependencies=[Depends(CheckUserInterfaceAuth('{{ table_name|snake_2_colon }}:list'))])
+async def get_{{ table_name }}_list(
+        request: Request,
+        query_db: AsyncSession = Depends(get_db),
+        page_query: {{ table_name|snake_to_pascal_case }}PageModel = Depends( {{ table_name|snake_to_pascal_case }}PageModel.as_query),
+        data_scope_sql: str = Depends(GetDataScope('SysDept'))
+):
+    {{ table_name }}_result = await {{ table_name|snake_to_pascal_case }}Service.get_{{ table_name }}_list(query_db, page_query, data_scope_sql)
+
+    return ResponseUtil.success(data={{ table_name }}_result)
+
+
+
+@{{ table_name|snake_to_camel }}Controller.post('/add', dependencies=[Depends(CheckUserInterfaceAuth('{{ table_name|snake_2_colon }}:add'))])
+@Log(title='{{ table_name }}', business_type=BusinessType.INSERT)
+async def add_{{ table_name }} (
+    request: Request,
+    add_model: {{ table_name|snake_to_pascal_case }}Model,
+    query_db: AsyncSession = Depends(get_db),
+    current_user: CurrentUserModel = Depends(LoginService.get_current_user),
+):
+    add_dict_type_result = await {{ table_name|snake_to_pascal_case }}Service.add_{{ table_name }}(query_db, add_model)
+    return ResponseUtil.success(data=add_dict_type_result)
+
+@{{ table_name|snake_to_camel }}Controller.put('/update', dependencies=[Depends(CheckUserInterfaceAuth('{{ table_name|snake_2_colon }}:update'))])
+@Log(title='{{ table_name }}', business_type=BusinessType.UPDATE)
+async def update_{{ table_name }}(
+    request: Request,
+    edit_model: {{ table_name|snake_to_pascal_case }}Model,
+    query_db: AsyncSession = Depends(get_db),
+    current_user: CurrentUserModel = Depends(LoginService.get_current_user),
+):
+    add_dict_type_result = await {{ table_name|snake_to_pascal_case }}Service.update_{{ table_name }}(query_db, edit_model)
+    return ResponseUtil.success(data=add_dict_type_result)
+
+
+@{{ table_name|snake_to_camel }}Controller.delete('/delete', dependencies=[Depends(CheckUserInterfaceAuth('{{ table_name|snake_2_colon }}:del'))])
+@Log(title='{{ table_name }}', business_type=BusinessType.DELETE)
+async def del_{{ table_name }}(
+    request: Request,
+    del_model: {{ table_name|snake_to_pascal_case }}Model,
+    query_db: AsyncSession = Depends(get_db),
+    current_user: CurrentUserModel = Depends(LoginService.get_current_user),
+):
+    del_result = await {{ table_name|snake_to_pascal_case }}Service.del_{{ table_name }}(query_db, del_model)
+    return ResponseUtil.success(data=del_result)
+
