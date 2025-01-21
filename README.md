@@ -3,7 +3,7 @@
 
 </p>
 <h1 align="center" style="margin: 30px 0 30px; font-weight: bold;">Flux Panel</h1>
-<h4 align="center">基于FastAPI+RuoYiVue3，实现前后端分离的快速开发框架,支持自动生成代码</h4>
+<h4 align="center">基于FastAPI+Vue3，实现前后端分离的快速开发框架,支持自动生成代码</h4>
 <p align="center">
     <a href="https://github.com/Richard0403/FluxPanel"><img src="https://img.shields.io/github/stars/Richard0403/FluxPanel?style=social"></a>
 	  <img src="https://img.shields.io/github/license/mashape/apistatus.svg"></a>
@@ -47,7 +47,7 @@ FluxPanel是一套全部开源的快速开发平台，毫无保留给个人及�
 13.  服务监控：监视当前系统CPU、内存、磁盘、堆栈等相关信息。
 14.  缓存监控：对系统的缓存信息查询，命令统计等。
 15.  系统接口：根据业务代码自动生成相关的api接口文档。
-16.  代码生成：根据mysql数据表的结构，自动生成python代码和vue代码
+16.  **代码生成：根据mysql数据表的结构，自动生成python代码和vue代码**
 17.  表单构建：（开发中）
 
 ## 演示图
