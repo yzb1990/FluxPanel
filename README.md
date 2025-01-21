@@ -30,6 +30,23 @@ FluxPanel是一套全部开源的快速开发平台，毫无保留给个人及�
 
 密码: admin123
 
+
+
+## 项目地址
+
+<table>
+    <tr>
+        <td>Gitee</td>
+        <td>https://gitee.com/richard403_admin/flux-panel</td>
+    </tr>
+  <tr>
+        <td>Github</td>
+        <td>https://github.com/Richard0403/FluxPanel</td>
+    </tr>
+</table>
+
+
+
 ## 内置功能
 
 1.  用户管理：用户是系统操作者，该功能主要完成系统用户配置。
@@ -150,7 +167,6 @@ python3 app.py --env=prod
         <td><img alt="zanzhu" src="https://github.com/user-attachments/assets/2da30ef6-ec5d-408d-ae2f-467be117097c"></td>
     </tr>
 </table>
-
 
 
 
