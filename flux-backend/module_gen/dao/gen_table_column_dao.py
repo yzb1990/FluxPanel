@@ -103,7 +103,7 @@ class GenTableColumnDao:
         """
         修改
         """
-        edit_dict_data = edit_model.model_dump(exclude_unset=True)
+        edit_dict_data = edit_model.model_dump(exclude_unset=False)
         await db.execute(update(GenTableColumn), [edit_dict_data])
         await db.flush()
         if auto_commit:
