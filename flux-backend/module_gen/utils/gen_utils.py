@@ -22,6 +22,7 @@ class GenUtils:
         table.module_name = cls.get_module_name(table.table_name)
         table.business_name = cls.get_business_name(table.table_name)
         table.function_name = table.table_comment
+        table.function_author = "FluxAdmin"
         
         # 初始化列属性字段
         for column in columns:
@@ -55,8 +56,9 @@ class GenUtils:
             column.html_type = GenConstants.HTML_DATETIME
         elif data_type in GenConstants.TYPE_NUMBER:
             column.html_type = GenConstants.HTML_INPUT
-        # 插入字段（默认所有字段都需要插入）
-        column.is_insert = GenConstants.REQUIRE
+        # 插入字段
+        if column.column_name not in GenConstants.COLUMN_NAME_NOT_EDIT and not column.is_pk == '1':
+            column.is_insert = GenConstants.REQUIRE
         # 编辑字段
         if column.column_name not in GenConstants.COLUMN_NAME_NOT_EDIT and not column.is_pk == '1':
             column.is_edit = GenConstants.REQUIRE
@@ -125,8 +127,9 @@ class GenUtils:
     @classmethod
     def get_business_name(cls, table_name: str) -> str:
         """获取业务名"""
-        words = table_name.split('_')
-        return words[1] if len(words) > 1 else words[0]
+        # words = table_name.split('_')
+        # return words[1] if len(words) > 1 else words[0]
+        return table_name
     
     @classmethod
     def get_template_path(cls, tpl_category: str) -> Dict[str, str]:

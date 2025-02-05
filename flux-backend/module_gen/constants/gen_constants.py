@@ -39,11 +39,10 @@ class GenConstants:
                   "bigint", "float", "float", "double", "decimal"]
     
     # 页面不需要编辑字段
-    COLUMN_NAME_NOT_EDIT = ["id", "create_by", "create_time", "del_flag"]
+    COLUMN_NAME_NOT_EDIT = ["id", "create_by", "create_time", "del_flag", "update_time"]
     
     # 页面不需要显示的列表字段
-    COLUMN_NAME_NOT_LIST = ["id", "create_by", "create_time", "del_flag", "update_by",
-                          "update_time"]
+    COLUMN_NAME_NOT_LIST = ["id", "create_by", "create_time", "del_flag", "update_by"]
     
     # 页面不需要查询字段
     COLUMN_NAME_NOT_QUERY = ["id", "create_by", "create_time", "del_flag", "update_by",

@@ -33,6 +33,8 @@ def get_sqlalchemy_type(mysql_field_type: str) -> str:
                     return f'{sqlalchemy_type}({match.group(1)})'
                 else:
                     return f'{sqlalchemy_type}'
+            else:
+                return f'{sqlalchemy_type}'
     return "String"
 
 def get_column_options(col) -> str:
