@@ -203,3 +203,8 @@ class GenTableService:
                     zip_file.writestr(target_file_name, content)
         zip_buffer.seek(0)
         return zip_buffer
+
+    @classmethod
+    async def create_table(cls, query_db, sql) -> bool:
+        """数据库表创建"""
+        return await GenTableDao.create_table(query_db, sql)

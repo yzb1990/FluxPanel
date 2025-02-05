@@ -227,3 +227,17 @@ class GenTableDao:
             GenTableModel(tableName=row[0], tableComment=row[1], createTime=row[2], updateTime=row[3]) for row in rows
         ]
 
+    @classmethod
+    async def create_table(cls, session: AsyncSession, sql: str) -> bool:
+        """ 创建表 """
+        try:
+            await session.execute(text(sql))
+            # 提交事务
+            await session.commit()
+            await session.flush()
+            return True
+        except Exception as e:
+            # 如果发生异常，回滚事务
+            await session.rollback()
+            print(f"创建表时发生错误: {e}")
+            return False

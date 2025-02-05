@@ -133,3 +133,13 @@ async def batch_generate_code(request: Request, ids_model: GenTableIdsModel = De
     return ResponseUtil.streaming(data=byte_data)
 
 
+@gen1Controller.post('/createTable', dependencies=[Depends(CheckUserInterfaceAuth('tool:gen:import'))])
+async def import_table(request: Request, sql: str = Query(None),
+                       query_db: AsyncSession = Depends(get_db),
+                       data_scope_sql: str = Depends(GetDataScope('SysDept'))):
+    """创建表结构"""
+    success = await GenTableService.create_table(query_db, sql)
+    if success:
+        return ResponseUtil.success()
+    else:
+        return ResponseUtil.failure(msg="创建失败，请检查语法是否符合mysql标准，并检查后端日志")
