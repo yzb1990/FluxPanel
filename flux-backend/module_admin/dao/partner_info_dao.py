@@ -33,7 +33,6 @@ class PartnerInfoDao:
         query = (
             select(PartnerInfo)
             .where(
-                PartnerInfo.location == query_object.location if query_object.location else True,
                 PartnerInfo.partner_name == query_object.partner_name if query_object.partner_name else True,
                 PartnerInfo.del_flag == '0',
                 eval(data_scope_sql) if data_scope_sql else True,

@@ -56,6 +56,7 @@ class PartnerInfoService:
             'location': '所在位置 ',
             'partnerName': '合作方名称 ',
             'price': '价格 ',
+            'updateTime': '更新时间 ',
         }
         new_data = [
             {mapping_dict.get(key): value for key, value in item.items() if mapping_dict.get(key)} for item in partner_info_list

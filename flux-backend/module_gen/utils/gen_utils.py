@@ -127,10 +127,9 @@ class GenUtils:
     @classmethod
     def get_business_name(cls, table_name: str) -> str:
         """获取业务名"""
-        # words = table_name.split('_')
-        # return words[1] if len(words) > 1 else words[0]
-        return table_name
-    
+        words = table_name.split('_')
+        return words[1] if len(words) > 1 else words[0]
+
     @classmethod
     def get_template_path(cls, tpl_category: str) -> Dict[str, str]:
         """获取模板信息"""
