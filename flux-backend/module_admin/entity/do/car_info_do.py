@@ -7,17 +7,17 @@ from config.database import BaseMixin, Base
 class CarInfo(Base, BaseMixin):
     __tablename__ = "car_info"
 
-    car_name = Column(String, nullable=False, comment='小车名称')
+    car_name = Column(String(255), nullable=False, comment='小车名称')
 
     car_type = Column(Integer, nullable=False, comment='车辆类型')
 
-    image = Column(String, comment='图片')
+    image = Column(String(255), comment='图片')
 
     lat = Column(Float, comment='纬度')
 
     lng = Column(Float, comment='经度')
 
-    location = Column(String, nullable=False, comment='所在位置')
+    location = Column(String(255), nullable=False, comment='所在位置')
 
     manager = Column(Integer, comment='管理员ID')
 

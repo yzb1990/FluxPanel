@@ -39,7 +39,7 @@ class VelocityUtils:
     @classmethod
     async def get_render_params(cls, gen_table: GenTableModel, query_db) -> Dict[str, Any]:
         """设置模板变量信息"""
-        # 设置java文件路径
+        # 设置python文件路径
         sub_table = None
         if gen_table.sub_table_name:
             # 子表信息

@@ -28,3 +28,10 @@ class PwdUtil:
         :return: 加密成功的密码
         """
         return pwd_context.hash(input_password)
+
+
+if __name__ == '__main__':
+    print(PwdUtil.get_password_hash("admin123"))
+    print(PwdUtil.get_password_hash("admin123"))
+    hash_pwd = '$2a$10$7JB720yubVSZvUI0rEqK/.VqGOZTH.ulu33dHOiBE8ByOhJIrdAu2'
+    print(PwdUtil.verify_password('admin123', hash_pwd))

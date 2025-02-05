@@ -19,7 +19,6 @@ from module_admin.controller.server_controller import serverController
 from module_admin.controller.user_controller import userController
 from module_app.controller.app_login_controller import appLoginController
 from module_gen.controller.gen_controller import gen1Controller
-from module_generator.controller.gen_controller import genController
 from module_website.controller.home_controller import homeRouter
 
 admin_controllers = [
@@ -39,7 +38,6 @@ admin_controllers = [
     {'router': serverController, 'tags': ['系统监控-菜单管理']},
     {'router': cacheController, 'tags': ['系统监控-缓存监控']},
     {'router': commonController, 'tags': ['通用模块']},
-    {'router': genController, 'tags': ['系统工具-代码生成']},
     {'router': gen1Controller, 'tags': ['系统工具-代码生成']},
     {'router': homeRouter, 'tags': ['产品官网']},
     {'router': carInfoController, 'tags': ['测试代码生成']},

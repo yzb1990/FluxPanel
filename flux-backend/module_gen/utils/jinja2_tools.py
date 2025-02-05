@@ -1,3 +1,5 @@
+import re
+
 from module_gen.constants.gen_constants import GenConstants
 
 
@@ -24,7 +26,13 @@ def get_sqlalchemy_type(mysql_field_type: str) -> str:
     if mysql_field_type:
         base_type = mysql_field_type.split("(", 1)[0]
         if base_type.upper() in GenConstants.MYSQL_TO_SQLALCHEMY.keys():
-            return GenConstants.MYSQL_TO_SQLALCHEMY[base_type.upper()]
+            sqlalchemy_type = GenConstants.MYSQL_TO_SQLALCHEMY[base_type.upper()]
+            if sqlalchemy_type == 'String' :
+                match = re.search(r'\((.*?)\)', mysql_field_type)
+                if match:
+                    return f'{sqlalchemy_type}({match.group(1)})'
+                else:
+                    return f'{sqlalchemy_type}'
     return "String"
 
 def get_column_options(col) -> str:
