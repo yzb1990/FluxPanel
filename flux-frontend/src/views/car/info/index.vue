@@ -2,7 +2,7 @@
     <div class="app-container">
         <el-form
             :model="queryParams"
-            ref="queryRef"
+            ref="multipleForm"
             :inline="true"
             v-show="showSearch"
             label-width="68px"
@@ -68,54 +68,115 @@
             </el-form-item>
         </el-form>
 
-        <el-row :gutter="10" class="mb8">
-            <el-col :span="1.5">
-                <el-button
-                    type="primary"
-                    plain
-                    icon="Plus"
-                    @click="handleAdd"
-                    v-hasPermi="['car:info:add']"
-                    >新增</el-button
-                >
-            </el-col>
-            <el-col :span="1.5">
-                <el-button
-                    type="success"
-                    plain
-                    icon="Edit"
-                    :disabled="single"
-                    @click="handleUpdate"
-                    v-hasPermi="['car:info:edit']"
-                    >修改</el-button
-                >
-            </el-col>
-            <el-col :span="1.5">
-                <el-button
-                    type="danger"
-                    plain
-                    icon="Delete"
-                    :disabled="multiple"
-                    @click="handleDelete"
-                    v-hasPermi="['car:info:remove']"
-                    >删除</el-button
-                >
-            </el-col>
-            <el-col :span="1.5">
-                <el-button
-                    type="warning"
-                    plain
-                    icon="Download"
-                    @click="handleExport"
-                    v-hasPermi="['car:info:export']"
-                    >导出</el-button
-                >
-            </el-col>
-            <right-toolbar
-                v-model:showSearch="showSearch"
-                @queryTable="getList"
-            ></right-toolbar>
-        </el-row>
+        <el-row :gutter="10" class="mb8"> </el-row>
+
+        <el-card class="base-table" ref="fullTable">
+            <TableSetup
+                ref="tSetup"
+                @onStripe="onStripe"
+                @onRefresh="onRefresh"
+                @onChange="onChange"
+                @onfullTable="onfullTable"
+                :columns="columns"
+                :isTable="isTable"
+            >
+                <template v-slot:operate>
+                    <el-button
+                        type="primary"
+                        plain
+                        icon="Plus"
+                        @click="handleAdd"
+                        v-hasPermi="['car:info:add']"
+                        >新增</el-button
+                    >
+                    <el-button
+                        type="success"
+                        plain
+                        icon="Edit"
+                        :disabled="single"
+                        @click="handleUpdate"
+                        v-hasPermi="['car:info:edit']"
+                        >修改</el-button
+                    >
+                    <el-button
+                        type="danger"
+                        plain
+                        icon="Delete"
+                        :disabled="multiple"
+                        @click="handleDelete"
+                        v-hasPermi="['car:info:remove']"
+                        >删除</el-button
+                    >
+                    <el-button
+                        type="warning"
+                        plain
+                        icon="Download"
+                        @click="handleExport"
+                        v-hasPermi="['car:info:export']"
+                        >导出</el-button
+                    >
+                </template>
+            </TableSetup>
+            <el-table
+                header-cell-class-name="tableHeader"
+                stripe
+                v-loading="loading"
+                :data="infoList"
+                :max-height="tableHeight"
+                :border="stripe"
+                @header-dragend="headerDragend"
+                highlight-current-row
+                ref="multipleTable"
+                class="mytable"
+            >
+                <template v-for="(item, index) in columns">
+                    <el-table-column
+                        v-if="item.show == 0"
+                        :key="index"
+                        :prop="item.prop"
+                        :align="item.align"
+                        :label="item.label"
+                        :sortable="item.sortable != 0"
+                        :width="item.width"
+                        :fixed="item.fixed != 0"
+                        :show-overflow-tooltip="item.tooltip != 0"
+                    >
+                        <template v-slot="{ row }">
+                            <template v-if="item.prop == 'operate'">
+                                <el-button
+                                    link
+                                    type="primary"
+                                    icon="Edit"
+                                    @click="handleUpdate(scope.row)"
+                                    v-hasPermi="['car:info:edit']"
+                                    >修改</el-button
+                                >
+                                <el-button
+                                    link
+                                    type="primary"
+                                    icon="Delete"
+                                    @click="handleDelete(scope.row)"
+                                    v-hasPermi="['car:info:remove']"
+                                    >删除</el-button
+                                >
+                            </template>
+                            <template v-else>
+                                {{ row[item.prop] }}
+                            </template>
+                        </template>
+                    </el-table-column>
+                </template>
+            </el-table>
+            <div class="table-pagination">
+                <pagination
+                    v-show="total > 0"
+                    :total="total"
+                    v-model:page="queryParams.pageNum"
+                    v-model:limit="queryParams.pageSize"
+                    @pagination="getList"
+                />
+            </div>
+        </el-card>
 
         <el-table
             v-loading="loading"
@@ -177,14 +238,6 @@
                 </template>
             </el-table-column>
         </el-table>
-
-        <pagination
-            v-show="total > 0"
-            :total="total"
-            v-model:page="queryParams.pageNum"
-            v-model:limit="queryParams.pageSize"
-            @pagination="getList"
-        />
 
         <!-- 添加或修改小车信息对话框 -->
         <el-dialog :title="title" v-model="open" width="800px" append-to-body>
@@ -260,6 +313,8 @@
 <script setup name="Info">
 import { listInfo, getInfo, delInfo, addInfo, updateInfo } from '@/api/car/info'
 
+import TableSetup from '@/components/TableSetup'
+import { onMounted } from 'vue'
 const { proxy } = getCurrentInstance()
 const { car_type } = proxy.useDict('car_type')
 
@@ -273,6 +328,11 @@ const multiple = ref(true)
 const total = ref(0)
 const title = ref('')
 const daterangeCreateTime = ref([])
+
+const columns = ref([])
+const stripe = ref(true)
+const isTable = ref(true)
+const tableHeight = ref(null)
 
 const data = reactive({
     form: {},
@@ -316,6 +376,34 @@ function getList() {
     })
 }
 
+function getColumns() {
+    columns.value = [
+        {
+            id: 1,
+            prop: 'carName',
+            label: '小车名称',
+            align: 'center',
+            width: 150,
+            show: 0,
+            sortable: 0,
+            fixed: 0,
+            tooltip: 1
+        },
+
+        {
+            id: 2,
+            prop: 'operate',
+            label: '操作',
+            align: 'center',
+            width: 150,
+            show: 0,
+            sortable: 0,
+            fixed: 0,
+            tooltip: 1
+        }
+    ]
+}
+
 // 取消按钮
 function cancel() {
     open.value = false
@@ -350,7 +438,7 @@ function handleQuery() {
 /** 重置按钮操作 */
 function resetQuery() {
     daterangeCreateTime.value = []
-    proxy.resetForm('queryRef')
+    proxy.resetForm('multipleForm')
     handleQuery()
 }
 
@@ -426,5 +514,48 @@ function handleExport() {
     )
 }
 
+//表格全屏
+function onfullTable() {
+    proxy.$refs.tSetup.onFull(proxy.$refs.fullTable.$el)
+}
+//表格刷新
+function onRefresh() {
+    getList()
+}
+function onStripe(val) {
+    stripe.value = val
+}
+//改变表头数据
+function onChange(val) {
+    this.columns.value = val
+}
+
+//改变表格宽度
+function headerDragend(newWidth, oldWidth, column, event) {
+    for (var i = 0; i < this.columns.length; i++) {
+        if (columns[i].prop === column.property) {
+            columns[i].width = newWidth
+            proxy.$refs.tSetup.tableWidth(columns[i])
+        }
+    }
+}
+
 getList()
+getColumns()
 </script>
+
+<style scoped lang="scss">
+.mytable {
+    margin-top: 10px;
+}
+
+.disabled_class {
+    color: #fff;
+    background-color: #fab6b6;
+    border-color: #fab6b6;
+}
+
+.disabled_class:hover {
+    cursor: not-allowed;
+}
+</style>

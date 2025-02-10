@@ -31,9 +31,11 @@
     "jsencrypt": "3.3.2",
     "nprogress": "0.2.0",
     "pinia": "2.1.7",
+    "screenfull": "^4.2.0",
     "vue": "3.4.15",
     "vue-cropper": "1.1.1",
-    "vue-router": "4.4.0"
+    "vue-router": "4.4.0",
+    "vuedraggable": "^4.1.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "5.0.5",
