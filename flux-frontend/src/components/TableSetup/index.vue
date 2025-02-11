@@ -70,8 +70,8 @@
                                                     v-model="element.tooltip"
                                                     @change="onTooltip(element)"
                                                     style="margin-right: 8px"
-                                                    :true-value="1"
-                                                    :false-value="0"
+                                                    true-value="1"
+                                                    false-value="0"
                                                 >
                                                 </el-checkbox>
                                             </el-tooltip>
@@ -120,8 +120,8 @@
                                                 <el-switch
                                                     :key="element.id"
                                                     v-model="element.fixed"
-                                                    :active-value="1"
-                                                    :inactive-value="0"
+                                                    active-value="1"
+                                                    inactive-value="0"
                                                     @change="onSwitch(element)"
                                                 >
                                                 </el-switch>
@@ -134,8 +134,8 @@
                                                 <el-switch
                                                     :key="element.id"
                                                     v-model="element.sortable"
-                                                    :active-value="1"
-                                                    :inactive-value="0"
+                                                    active-value="1"
+                                                    inactive-value="0"
                                                     @change="onSwitch(element)"
                                                 >
                                                 </el-switch>
@@ -148,8 +148,8 @@
                                                 <el-switch
                                                     :key="element.id"
                                                     v-model="element.show"
-                                                    :active-value="1"
-                                                    :inactive-value="0"
+                                                    active-value="1"
+                                                    inactive-value="0"
                                                     @change="onSwitch(element)"
                                                 >
                                                 </el-switch>
@@ -191,7 +191,7 @@
 
 <script>
 import { ref, watch } from 'vue'
-import { editColumnItem, modifySort } from '@/api/system/table'
+import { updateTable, modifySort } from '@/api/system/table'
 import draggable from 'vuedraggable'
 import screenfull from 'screenfull'
 
@@ -264,9 +264,8 @@ export default {
         }
 
         const updateColumnItem = (row) => {
-            editColumnItem({
+            updateTable({
                 id: row.id,
-                menu_id: row.menu_id,
                 prop: row.prop,
                 label: row.label,
                 sortable: row.sortable,

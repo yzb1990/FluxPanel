@@ -131,7 +131,7 @@
             >
                 <template v-for="(item, index) in columns">
                     <el-table-column
-                        v-if="item.show == 0"
+                        v-if="item.show == 1"
                         :key="index"
                         :prop="item.prop"
                         :align="item.align"
@@ -177,67 +177,6 @@
                 />
             </div>
         </el-card>
-
-        <el-table
-            v-loading="loading"
-            :data="infoList"
-            @selection-change="handleSelectionChange"
-        >
-            <el-table-column type="selection" width="55" align="center" />
-
-            <el-table-column label="小车名称" align="center" prop="carName" />
-
-            <el-table-column label="车辆类型" align="center" prop="carType">
-                <template #default="scope">
-                    <dict-tag :options="car_type" :value="scope.row.carType" />
-                </template>
-            </el-table-column>
-
-            <el-table-column
-                label="创建时间"
-                align="center"
-                prop="createTime"
-            />
-
-            <el-table-column label="id" align="center" prop="id" />
-
-            <el-table-column label="图片" align="center" prop="image" />
-
-            <el-table-column label="纬度" align="center" prop="lat" />
-
-            <el-table-column label="经度" align="center" prop="lng" />
-
-            <el-table-column label="所在位置" align="center" prop="location" />
-
-            <el-table-column label="管理员ID" align="center" prop="manager" />
-
-            <el-table-column label="价格" align="center" prop="price" />
-
-            <el-table-column
-                label="操作"
-                align="center"
-                class-name="small-padding fixed-width"
-            >
-                <template #default="scope">
-                    <el-button
-                        link
-                        type="primary"
-                        icon="Edit"
-                        @click="handleUpdate(scope.row)"
-                        v-hasPermi="['car:info:edit']"
-                        >修改</el-button
-                    >
-                    <el-button
-                        link
-                        type="primary"
-                        icon="Delete"
-                        @click="handleDelete(scope.row)"
-                        v-hasPermi="['car:info:remove']"
-                        >删除</el-button
-                    >
-                </template>
-            </el-table-column>
-        </el-table>
 
         <!-- 添加或修改小车信息对话框 -->
         <el-dialog :title="title" v-model="open" width="800px" append-to-body>
@@ -312,7 +251,7 @@
 
 <script setup name="Info">
 import { listInfo, getInfo, delInfo, addInfo, updateInfo } from '@/api/car/info'
-
+import { listAllTable } from '@/api/system/table'
 import TableSetup from '@/components/TableSetup'
 import { onMounted } from 'vue'
 const { proxy } = getCurrentInstance()
@@ -377,31 +316,13 @@ function getList() {
 }
 
 function getColumns() {
-    columns.value = [
-        {
-            id: 1,
-            prop: 'carName',
-            label: '小车名称',
-            align: 'center',
-            width: 150,
-            show: 0,
-            sortable: 0,
-            fixed: 0,
-            tooltip: 1
-        },
-
-        {
-            id: 2,
-            prop: 'operate',
-            label: '操作',
-            align: 'center',
-            width: 150,
-            show: 0,
-            sortable: 0,
-            fixed: 0,
-            tooltip: 1
-        }
-    ]
+    listAllTable({ tableName: 'car_info' })
+        .then((response) => {
+            columns.value = response.data
+        })
+        .then(() => {
+            getList()
+        })
 }
 
 // 取消按钮
@@ -527,20 +448,42 @@ function onStripe(val) {
 }
 //改变表头数据
 function onChange(val) {
-    this.columns.value = val
+    columns.value = val
 }
 
 //改变表格宽度
 function headerDragend(newWidth, oldWidth, column, event) {
-    for (var i = 0; i < this.columns.length; i++) {
-        if (columns[i].prop === column.property) {
-            columns[i].width = newWidth
-            proxy.$refs.tSetup.tableWidth(columns[i])
+    for (var i = 0; i < columns.value.length; i++) {
+        if (columns.value[i].prop === column.property) {
+            columns.value[i].width = newWidth
+            proxy.$refs.tSetup.tableWidth(columns.value[i])
         }
     }
 }
 
-getList()
+onMounted(() => {
+    tableH()
+    window.addEventListener('resize', tableH)
+})
+onUnmounted(() => {
+    window.removeEventListener('resize', tableH)
+})
+
+const tableH = () => {
+    if (
+        proxy.$refs.tSetup.value &&
+        multipleForm.value &&
+        document.querySelector('.table-pagination')
+    ) {
+        tableHeight.value =
+            window.innerHeight -
+            proxy.$refs.tSetup.value.offsetHeight -
+            multipleForm.value.offsetHeight -
+            document.querySelector('.table-pagination').offsetHeight -
+            115
+    }
+}
+
 getColumns()
 </script>
 
