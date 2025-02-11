@@ -111,7 +111,7 @@ class GenTableService:
         if columns:
             for column in columns:
                 column.table_id = gen_table.table_id
-                await GenTableColumnDao.edit_gen_table_column(query_db, column)
+                await GenTableColumnDao.edit_gen_table_column(query_db, column, exclude_unset=False)
 
     @classmethod
     async def delete_gen_table_by_ids(cls, query_db, ids: List[int]) -> None:
@@ -167,7 +167,7 @@ class GenTableService:
                     db_table_column.query_type = prev_column.query_type
                 db_table_column.is_required = prev_column.is_required
                 db_table_column.html_type = prev_column.html_type
-                await GenTableColumnDao.edit_gen_table_column(query_db, db_table_column, auto_commit=False)
+                await GenTableColumnDao.edit_gen_table_column(query_db, db_table_column, auto_commit=False, exclude_unset=True)
             else:
                 await GenTableColumnDao.add_gen_table_column(query_db, db_table_column)
 

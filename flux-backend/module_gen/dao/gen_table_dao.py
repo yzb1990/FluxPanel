@@ -190,13 +190,6 @@ class GenTableDao:
 
         rows = await PageUtil.paginate(session, query.params(**params), gen_table.page_num, gen_table.page_size, is_page)
         return rows
-        # 执行查询
-        # result = await session.execute(query.params(**params))
-        # rows = result.fetchall()
-        # # 将结果映射到 GenTableResult 对象
-        # return [
-        #     GenTableModel(tableName=row[0], tableComment=row[1], createTime=row[2], updateTime=row[3]) for row in rows
-        # ]
 
 
     @classmethod

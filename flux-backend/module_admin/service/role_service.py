@@ -12,7 +12,7 @@ from module_admin.entity.vo.role_vo import (
     RoleModel,
     RolePageQueryModel,
 )
-from module_admin.entity.vo.user_vo import UserInfoModel, UserRolePageQueryModel
+from module_admin.entity.vo.user_vo import UserInfoModel, UserRolePageQueryModel, CurrentUserModel
 from module_admin.dao.role_dao import RoleDao
 from module_admin.dao.user_dao import UserDao
 from utils.common_util import CamelCaseUtil, export_list2excel
@@ -358,3 +358,8 @@ class RoleService:
         )
 
         return unallocated_list
+
+    @classmethod
+    async def get_role_table_tree(cls, query_db: AsyncSession, role_id: int, user:CurrentUserModel):
+        table_field_tree = await RoleDao.get_table_filed_tree(query_db)
+        pass

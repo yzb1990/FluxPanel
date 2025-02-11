@@ -17,6 +17,7 @@ from module_admin.controller.partner_info_controller import partnerInfoControlle
 from module_admin.controller.post_controler import postController
 from module_admin.controller.role_controller import roleController
 from module_admin.controller.server_controller import serverController
+from module_admin.controller.sys_table_controller import sysTableController
 from module_admin.controller.user_controller import userController
 from module_app.controller.app_login_controller import appLoginController
 from module_gen.controller.gen_controller import gen1Controller
@@ -28,6 +29,7 @@ admin_controllers = [
     {'router': userController, 'tags': ['系统管理-用户管理']},
     {'router': roleController, 'tags': ['系统管理-角色管理']},
     {'router': menuController, 'tags': ['系统管理-菜单管理']},
+    {'router': sysTableController, 'tags': ['系统管理-表格管理']},
     {'router': deptController, 'tags': ['系统管理-部门管理']},
     {'router': postController, 'tags': ['系统管理-岗位管理']},
     {'router': dictController, 'tags': ['系统管理-字典管理']},

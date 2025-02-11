@@ -281,3 +281,16 @@ async def batch_cancel_system_role_user(
     logger.info(batch_cancel_user_role_result.message)
 
     return ResponseUtil.success(msg=batch_cancel_user_role_result.message)
+
+
+@roleController.get('/roleTableTreeSelect/{role_id}')
+async def get_system_role_table_tree(
+    request: Request,
+    role_id: int,
+    query_db: AsyncSession = Depends(get_db),
+    current_user: CurrentUserModel = Depends(LoginService.get_current_user),
+):
+    role_menu_query_result = await RoleService.get_role_table_tree(query_db, role_id, current_user)
+    logger.info('获取成功')
+    return ResponseUtil.success(model_content=role_menu_query_result)
+

@@ -1,5 +1,5 @@
 from datetime import datetime, time
-from sqlalchemy import and_, delete, desc, func, or_, select, update  # noqa: F401
+from sqlalchemy import and_, delete, desc, func, or_, select, update, inspect  # noqa: F401
 from sqlalchemy.ext.asyncio import AsyncSession
 from module_admin.entity.do.dept_do import SysDept
 from module_admin.entity.do.menu_do import SysMenu
@@ -336,3 +336,27 @@ class RoleDao:
         ).scalar()
 
         return user_count
+
+    @classmethod
+    async def get_table_filed_tree(cls, query_db: AsyncSession):
+        query = f"""
+            SELECT table_name, column_name
+            FROM information_schema.columns
+            WHERE table_schema = :database_name
+            ORDER BY table_name, ordinal_position;
+            """
+
+        result = await query_db.execute(query, {'database_name': 'flux_data'})
+        rows = result.fetchall()
+
+        # 构建树状结构
+        table_structure = {}
+        for row in rows:
+            table_name = row['table_name']
+            column_name = row['column_name']
+
+            if table_name not in table_structure:
+                table_structure[table_name] = []
+            table_structure[table_name].append(column_name)
+
+        return table_structure

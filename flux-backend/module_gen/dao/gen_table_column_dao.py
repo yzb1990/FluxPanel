@@ -99,11 +99,11 @@ class GenTableColumnDao:
         return gen_table_column
 
     @classmethod
-    async def edit_gen_table_column(cls, db: AsyncSession, edit_model: GenTableColumnModel, auto_commit: bool = True):
+    async def edit_gen_table_column(cls, db: AsyncSession, edit_model: GenTableColumnModel, auto_commit: bool = True, exclude_unset=False):
         """
         修改
         """
-        edit_dict_data = edit_model.model_dump(exclude_unset=False)
+        edit_dict_data = edit_model.model_dump(exclude_unset=exclude_unset)
         await db.execute(update(GenTableColumn), [edit_dict_data])
         await db.flush()
         if auto_commit:

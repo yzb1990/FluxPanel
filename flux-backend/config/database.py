@@ -34,7 +34,7 @@ class Base(AsyncAttrs, DeclarativeBase):
 
 class BaseMixin:
     """model的基类,所有model都必须继承"""
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement=True)
     create_time = Column(DateTime, nullable=False, default=datetime.datetime.now, comment='创建时间')
     update_time = Column(DateTime, nullable=False, default=datetime.datetime.now,
                          onupdate=datetime.datetime.now, index=True, comment='更新时间')
