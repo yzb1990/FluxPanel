@@ -4,15 +4,16 @@
         header-cell-class-name="tableHeader"
         stripe
         v-loading="loading"
-        :data="tableData"
+        :data="sonTableData"
         :max-height="tableHeight"
         :border="stripe"
         @header-dragend="headerDragend"
+        @selection-change="handleSelectionChange"
         highlight-current-row
-        ref="multipleTable"
         class="mytable"
     >
-        <template v-for="(item, index) in columns">
+        <el-table-column type="selection" width="55" align="center" />
+        <template v-for="(item, index) in sonColumns">
             <el-table-column
                 v-if="item.show == 1"
                 :key="index"
@@ -33,30 +34,63 @@
 </template>
 
 <script>
+import { ta } from 'element-plus/es/locales.mjs'
+import { ref, watch } from 'vue'
+
 export default {
-    name: 'CustomTable',
-    props: {
-        tableData: {
-            type: Array,
-            required: true
-        },
-        columns: {
-            type: Array,
-            required: true
-        },
-        loading: {
-            type: Boolean,
-            default: false
-        },
-        stripe: {
-            type: Boolean,
-            default: true
+    name: 'AutoTable',
+    props: ['tableData', 'columns', 'loading', 'stripe', 'tableHeight'],
+    components: {},
+    setup(props, { emit }) {
+        const stripe = ref(true)
+        const sonColumns = ref([])
+        const sonTableData = ref([])
+        const loading = ref(false)
+        const tableHeight = ref(300)
+
+        watch(
+            () => props.columns,
+            (newVal) => {
+                sonColumns.value = newVal
+            },
+            { immediate: true, deep: true }
+        )
+        watch(
+            () => props.tableData,
+            (newVal) => {
+                sonTableData.value = newVal
+            },
+            { immediate: true, deep: true }
+        )
+
+        const headerDragend = (newWidth, oldWidth, column, event) => {
+            for (var i = 0; i < sonColumns.value.length; i++) {
+                if (sonColumns.value[i].prop === column.property) {
+                    sonColumns.value[i].width = newWidth
+                    emit('onColumnWidthChange', sonColumns.value[i])
+                }
+            }
+        }
+
+        const handleSelectionChange = (selection) => {
+            emit('onSelectionChange', selection)
+        }
+
+        return {
+            stripe,
+            sonColumns,
+            loading,
+            sonTableData,
+            tableHeight,
+            headerDragend,
+            handleSelectionChange
         }
     }
 }
 </script>
 
-<style lang='scss' scoped>
+
+<style scoped>
 .mytable {
     margin-top: 10px;
 }

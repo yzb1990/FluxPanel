@@ -117,56 +117,36 @@
                     >
                 </template>
             </TableSetup>
-            <el-table
-                header-cell-class-name="tableHeader"
-                stripe
-                v-loading="loading"
-                :data="infoList"
-                :max-height="tableHeight"
-                :border="stripe"
-                @header-dragend="headerDragend"
-                highlight-current-row
+            <auto-table
                 ref="multipleTable"
                 class="mytable"
+                :tableData="infoList"
+                :columns="columns"
+                :loading="loading"
+                :stripe="stripe"
+                :tableHeight="tableHeight"
+                @onColumnWidthChange="onColumnWidthChange"
+                @onSelectionChange="handleSelectionChange"
             >
-                <template v-for="(item, index) in columns">
-                    <el-table-column
-                        v-if="item.show == 1"
-                        :key="index"
-                        :prop="item.prop"
-                        :align="item.align"
-                        :label="item.label"
-                        :sortable="item.sortable != 0"
-                        :width="item.width"
-                        :fixed="item.fixed != 0"
-                        :show-overflow-tooltip="item.tooltip != 0"
+                <template #operate="{ row }">
+                    <el-button
+                        link
+                        type="primary"
+                        icon="Edit"
+                        @click="handleUpdate(row)"
+                        v-hasPermi="['partner:info:edit']"
+                        >修改</el-button
                     >
-                        <template v-slot="{ row }">
-                            <template v-if="item.prop == 'operate'">
-                                <el-button
-                                    link
-                                    type="primary"
-                                    icon="Edit"
-                                    @click="handleUpdate(scope.row)"
-                                    v-hasPermi="['car:info:edit']"
-                                    >修改</el-button
-                                >
-                                <el-button
-                                    link
-                                    type="primary"
-                                    icon="Delete"
-                                    @click="handleDelete(scope.row)"
-                                    v-hasPermi="['car:info:remove']"
-                                    >删除</el-button
-                                >
-                            </template>
-                            <template v-else>
-                                {{ row[item.prop] }}
-                            </template>
-                        </template>
-                    </el-table-column>
+                    <el-button
+                        link
+                        type="primary"
+                        icon="Delete"
+                        @click="handleDelete(row)"
+                        v-hasPermi="['partner:info:remove']"
+                        >删除</el-button
+                    >
                 </template>
-            </el-table>
+            </auto-table>
             <div class="table-pagination">
                 <pagination
                     v-show="total > 0"
@@ -253,6 +233,7 @@
 import { listInfo, getInfo, delInfo, addInfo, updateInfo } from '@/api/car/info'
 import { listAllTable } from '@/api/system/table'
 import TableSetup from '@/components/TableSetup'
+import AutoTable from '@/components/AutoTable'
 import { onMounted } from 'vue'
 const { proxy } = getCurrentInstance()
 const { car_type } = proxy.useDict('car_type')
@@ -319,6 +300,15 @@ function getColumns() {
     listAllTable({ tableName: 'car_info' })
         .then((response) => {
             columns.value = response.data
+            columns.value.push({
+                prop: 'operate',
+                label: '操作',
+                width: 200,
+                fixed: 0,
+                show: 1,
+                tooltip: 0,
+                sortable: 0
+            })
         })
         .then(() => {
             getList()
@@ -452,13 +442,8 @@ function onChange(val) {
 }
 
 //改变表格宽度
-function headerDragend(newWidth, oldWidth, column, event) {
-    for (var i = 0; i < columns.value.length; i++) {
-        if (columns.value[i].prop === column.property) {
-            columns.value[i].width = newWidth
-            proxy.$refs.tSetup.tableWidth(columns.value[i])
-        }
-    }
+function onColumnWidthChange(column) {
+    proxy.$refs.tSetup.tableWidth(column)
 }
 
 onMounted(() => {
