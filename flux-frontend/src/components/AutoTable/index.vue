@@ -46,7 +46,7 @@ export default {
         const sonColumns = ref([])
         const sonTableData = ref([])
         const loading = ref(false)
-        const tableHeight = ref(300)
+        const tableHeight = ref(500)
 
         watch(
             () => props.columns,

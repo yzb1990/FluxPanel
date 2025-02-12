@@ -252,7 +252,7 @@ const daterangeCreateTime = ref([])
 const columns = ref([])
 const stripe = ref(true)
 const isTable = ref(true)
-const tableHeight = ref(null)
+const tableHeight = ref(500)
 
 const data = reactive({
     form: {},
@@ -300,15 +300,6 @@ function getColumns() {
     listAllTable({ tableName: 'car_info' })
         .then((response) => {
             columns.value = response.data
-            columns.value.push({
-                prop: 'operate',
-                label: '操作',
-                width: 200,
-                fixed: 0,
-                show: 1,
-                tooltip: 0,
-                sortable: 0
-            })
         })
         .then(() => {
             getList()
@@ -444,29 +435,6 @@ function onChange(val) {
 //改变表格宽度
 function onColumnWidthChange(column) {
     proxy.$refs.tSetup.tableWidth(column)
-}
-
-onMounted(() => {
-    tableH()
-    window.addEventListener('resize', tableH)
-})
-onUnmounted(() => {
-    window.removeEventListener('resize', tableH)
-})
-
-const tableH = () => {
-    if (
-        proxy.$refs.tSetup.value &&
-        multipleForm.value &&
-        document.querySelector('.table-pagination')
-    ) {
-        tableHeight.value =
-            window.innerHeight -
-            proxy.$refs.tSetup.value.offsetHeight -
-            multipleForm.value.offsetHeight -
-            document.querySelector('.table-pagination').offsetHeight -
-            115
-    }
 }
 
 getColumns()

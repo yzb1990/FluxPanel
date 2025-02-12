@@ -57,6 +57,9 @@ class SysTableService:
                 sys_table.prop = snake_to_camel(column.column_name)
                 sys_table.label = column.column_comment if column.column_comment else column.column_name
                 await SysTableDao.add_sys_table(query_db, sys_table, auto_commit=False)
+            # 添加操作框
+            operate_model = SysTableModel(tableName=table.table_name, fieldName = 'operate',  prop='operate', label='操作', width=200)
+            await SysTableDao.add_sys_table(query_db, operate_model, auto_commit=False)
         await query_db.commit()
 
 
@@ -69,7 +72,7 @@ class SysTableService:
 
     @classmethod
     async def del_sys_table(cls, query_db: AsyncSession, sys_table_ids: List[str]):
-        await SysTableDao.del_sys_table(query_db, sys_table_ids)
+        await SysTableDao.del_sys_table(query_db, sys_table_ids, soft_del=False)
 
 
     @classmethod
