@@ -98,3 +98,14 @@ class SysTableService:
         ]
         binary_data = export_list2excel(new_data)
         return binary_data
+
+    @classmethod
+    async def sort_column(cls, query_db: AsyncSession, column_ids: List[int]):
+        columns = await SysTableDao.get_sys_table_list_by_ids(query_db, column_ids)
+        columns_dict = {column.id: column for column in columns}
+        for idx, sys_table_id in enumerate(column_ids):
+            sys_table_column = columns_dict.get(sys_table_id)
+            if sys_table_column:
+                sys_table_column.sequence = idx # 顺序从 0 开始
+        await query_db.flush()
+        await query_db.commit()

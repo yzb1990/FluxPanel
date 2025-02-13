@@ -68,8 +68,6 @@
             </el-form-item>
         </el-form>
 
-        <el-row :gutter="10" class="mb8"> </el-row>
-
         <el-card class="base-table" ref="fullTable">
             <TableSetup
                 ref="tSetup"
@@ -445,19 +443,3 @@ function onColumnWidthChange(column) {
 
 getColumns()
 </script>
-
-<style scoped lang="scss">
-.mytable {
-    margin-top: 10px;
-}
-
-.disabled_class {
-    color: #fff;
-    background-color: #fab6b6;
-    border-color: #fab6b6;
-}
-
-.disabled_class:hover {
-    cursor: not-allowed;
-}
-</style>

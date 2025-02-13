@@ -33,3 +33,5 @@ class SysTable(Base, BaseMixin):
 
     width = Column(Integer, nullable=False, default=150, comment='宽度')
 
+    sequence = Column(Integer, nullable=False, default=0, comment='字段顺序')
+

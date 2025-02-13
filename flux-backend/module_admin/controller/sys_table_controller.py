@@ -15,7 +15,8 @@ from module_gen.entity.vo.gen_table_vo import GenTablePageModel
 from utils.response_util import ResponseUtil
 from utils.common_util import bytes2file_response
 
-from module_admin.entity.vo.sys_table_vo import SysTablePageModel, SysTableModel, DbTablePageModel
+from module_admin.entity.vo.sys_table_vo import SysTablePageModel, SysTableModel, DbTablePageModel, \
+    SysTableColumnIdsModel
 from module_admin.service.sys_table_service import SysTableService
 
 sysTableController = APIRouter(prefix='/sys/table', dependencies=[Depends(LoginService.get_current_user)])
@@ -123,3 +124,13 @@ async def export_sys_table(
         query_db, sys_table_form, data_scope_sql
     )
     return ResponseUtil.streaming(data=bytes2file_response(export_result))
+
+@sysTableController.post('/column/sort', dependencies=[Depends(CheckUserInterfaceAuth('sys:table:update'))])
+@Log(title='sys_table', business_type=BusinessType.UPDATE)
+async def sys_table_column_sort (
+    request: Request,
+    ids_model: SysTableColumnIdsModel,
+    query_db: AsyncSession = Depends(get_db)
+):
+    await SysTableService.sort_column(query_db, ids_model.ids)
+    return ResponseUtil.success()

@@ -3,11 +3,11 @@ import request from '@/utils/request'
 
 
   // 更新表列顺序
-export function modifySort(query) {
+export function modifySort(data) {
     return request({
-      url: '/system/table/column/sort',
+      url: '/sys/table/column/sort',
       method: 'post',
-      params: query
+      data: data
     })
 }
   

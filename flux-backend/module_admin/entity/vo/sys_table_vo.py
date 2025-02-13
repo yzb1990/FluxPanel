@@ -28,7 +28,7 @@ class SysTableModel(BaseModel):
     update_by_name: Optional[str] =  Field(default=None, description='更新者')
     update_time: Optional[datetime] =  Field(default=None, description='更新时间')
     width: Optional[int] =  Field(default=None, description='宽度')
-
+    sequence: Optional[int] =  Field(default=None, description='字段顺序')
 
 @as_query
 class SysTablePageModel(SysTableModel):
@@ -49,3 +49,10 @@ class DbTablePageModel(BaseModel):
     table_comment: Optional[str] = Field(default=None, description='表描述')
     page_num: int = Field(default=1, description='当前页码')
     page_size: int = Field(default=10, description='每页记录数')
+
+class SysTableColumnIdsModel(BaseModel):
+    """
+    列排序
+    """
+    model_config = ConfigDict(alias_generator=to_camel, from_attributes=True)
+    ids: Optional[List[int]] = Field()

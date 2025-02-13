@@ -103,6 +103,8 @@
 
             <el-table-column label="宽度" align="center" prop="width" />
 
+            <el-table-column label="字段顺序" align="center" prop="sequence" />
+
             <el-table-column label="对其方式" align="center" prop="align">
                 <template #default="scope">
                     <dict-tag :options="field_align" :value="scope.row.align" />

@@ -242,7 +242,7 @@ export default {
                 header.push(sonColumns.value[i].id)
             }
             modifySort({
-                header
+                ids: header
             })
                 .then((res) => {
                     if (res.code == 200) {

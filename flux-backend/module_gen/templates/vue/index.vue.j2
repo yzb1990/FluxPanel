@@ -66,98 +66,99 @@
       </el-form-item>
     </el-form>
 
-    <el-row :gutter="10" class="mb8">
-      <el-col :span="1.5">
-        <el-button
-          type="primary"
-          plain
-          icon="Plus"
-          @click="handleAdd"
-          v-hasPermi="['{{ moduleName }}:{{ businessName }}:add']"
-        >新增</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="success"
-          plain
-          icon="Edit"
-          :disabled="single"
-          @click="handleUpdate"
-          v-hasPermi="['{{ moduleName }}:{{ businessName }}:edit']"
-        >修改</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="danger"
-          plain
-          icon="Delete"
-          :disabled="multiple"
-          @click="handleDelete"
-          v-hasPermi="['{{ moduleName }}:{{ businessName }}:remove']"
-        >删除</el-button>
-      </el-col>
-      <el-col :span="1.5">
-        <el-button
-          type="warning"
-          plain
-          icon="Download"
-          @click="handleExport"
-          v-hasPermi="['{{ moduleName }}:{{ businessName }}:export']"
-        >导出</el-button>
-      </el-col>
-      <right-toolbar v-model:showSearch="showSearch" @queryTable="getList"></right-toolbar>
-    </el-row>
+    <el-card class="base-table" ref="fullTable">
+            <TableSetup
+                ref="tSetup"
+                @onStripe="onStripe"
+                @onRefresh="onRefresh"
+                @onChange="onChange"
+                @onfullTable="onfullTable"
+                @onSearchChange="onSearchChange"
+                :columns="columns"
+                :isTable="isTable"
+            >
+                <template v-slot:operate>
+                    <el-button
+                      type="primary"
+                      plain
+                      icon="Plus"
+                      @click="handleAdd"
+                      v-hasPermi="['{{ moduleName }}:{{ businessName }}:add']"
+                    >新增</el-button>
+                    <el-button
+                      type="success"
+                      plain
+                      icon="Edit"
+                      :disabled="single"
+                      @click="handleUpdate"
+                      v-hasPermi="['{{ moduleName }}:{{ businessName }}:edit']"
+                    >修改</el-button>
+                    <el-button
+                      type="danger"
+                      plain
+                      icon="Delete"
+                      :disabled="multiple"
+                      @click="handleDelete"
+                      v-hasPermi="['{{ moduleName }}:{{ businessName }}:remove']"
+                    >删除</el-button>
+                    <el-button
+                      type="warning"
+                      plain
+                      icon="Download"
+                      @click="handleExport"
+                      v-hasPermi="['{{ moduleName }}:{{ businessName }}:export']"
+                    >导出</el-button>
+                </template>
+            </TableSetup>
+            <auto-table
+                ref="multipleTable"
+                class="mytable"
+                :tableData="{{ businessName }}List"
+                :columns="columns"
+                :loading="loading"
+                :stripe="stripe"
+                :tableHeight="tableHeight"
+                @onColumnWidthChange="onColumnWidthChange"
+                @onSelectionChange="handleSelectionChange"
+            >
+              {% for column in columns %}
+                {% set pythonField = column.pythonField | snake_to_camel %}
+                {% set parentheseIndex = column.columnComment.find("（") %}
+                {% set comment = column.columnComment[:parentheseIndex] if parentheseIndex != -1 else column.columnComment %}
 
-    <el-table v-loading="loading" :data="{{ businessName }}List" @selection-change="handleSelectionChange">
-      <el-table-column type="selection" width="55" align="center" />
-      {% for column in columns %}
-        {% set pythonField = column.pythonField | snake_to_camel %}
-        {% set parentheseIndex = column.columnComment.find("（") %}
-        {% set comment = column.columnComment[:parentheseIndex] if parentheseIndex != -1 else column.columnComment %}
-
-        {% if column.isPk == "1" %}
-          <el-table-column label="{{ comment }}" align="center" prop="{{ pythonField }}" />
-        {% elif column.list and column.htmlType == "datetime" %}
-          <el-table-column label="{{ comment }}" align="center" prop="{{ pythonField }}" width="180">
-            <template #default="scope">
-              <span>{% raw %}{{{% endraw %} parseTime(scope.row.{{ pythonField }}, '{y}-{m}-{d}') {% raw %}}}{% endraw %}</span>
-            </template>
-          </el-table-column>
-        {% elif column.isList == "1" and column.htmlType == "imageUpload" %}
-          <el-table-column label="{{ comment }}" align="center" prop="{{ pythonField }}" width="100">
-            <template #default="scope">
-              <image-preview :src="scope.row.{{ pythonField }}" :width="50" :height="50"/>
-            </template>
-          </el-table-column>
-        {% elif column.isList == "1" and column.dictType != "" %}
-          <el-table-column label="{{ comment }}" align="center" prop="{{ pythonField }}">
-            <template #default="scope">
-              {% if column.htmlType == "checkbox" %}
-                <dict-tag :options="{{ column.dictType }}" :value="scope.row.{{ pythonField }} ? scope.row.{{ pythonField }}.split(',') : []"/>
-              {% else %}
-                <dict-tag :options="{{ column.dictType }}" :value="scope.row.{{ pythonField }}"/>
-              {% endif %}
-            </template>
-          </el-table-column>
-        {% elif column.isList == "1" and pythonField != "" %}
-          <el-table-column label="{{ comment }}" align="center" prop="{{ pythonField }}" />
-        {% endif %}
-      {% endfor %}
-      <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
-        <template #default="scope">
-          <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['{{ moduleName }}:{{ businessName }}:edit']">修改</el-button>
-          <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['{{ moduleName }}:{{ businessName }}:remove']">删除</el-button>
-        </template>
-      </el-table-column>
-    </el-table>
-
-    <pagination
-      v-show="total>0"
-      :total="total"
-      v-model:page="queryParams.pageNum"
-      v-model:limit="queryParams.pageSize"
-      @pagination="getList"
-    />
+                {% if column.isList and column.htmlType == "datetime" %}
+                    <template #{{ pythonField }}="{ row }">
+                      <span>{% raw %}{{{% endraw %} parseTime(row.{{ pythonField }}, '{y}-{m}-{d}') {% raw %}}}{% endraw %}</span>
+                    </template>
+                {% elif column.isList == "1" and column.htmlType == "imageUpload" %}
+                    <template #{{ pythonField }}="{ row }">
+                      <image-preview :src="row.{{ pythonField }}" :width="50" :height="50"/>
+                    </template>
+                {% elif column.isList == "1" and column.dictType != "" %}
+                    <template #{{ pythonField }}="{ row }">
+                      {% if column.htmlType == "checkbox" %}
+                        <dict-tag :options="{{ column.dictType }}" :value="row.{{ pythonField }} ? row.{{ pythonField }}.split(',') : []"/>
+                      {% else %}
+                        <dict-tag :options="{{ column.dictType }}" :value="row.{{ pythonField }}"/>
+                      {% endif %}
+                    </template>
+                {% endif %}
+              {% endfor %}
+                <template #operate="{ row }">
+                  <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['{{ moduleName }}:{{ businessName }}:edit']">修改</el-button>
+                  <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['{{ moduleName }}:{{ businessName }}:remove']">删除</el-button>
+                </template>
+            </auto-table>
+            <div class="table-pagination">
+                <pagination
+                    v-show="total > 0"
+                    :total="total"
+                    v-model:page="queryParams.pageNum"
+                    v-model:limit="queryParams.pageSize"
+                    @pagination="getList"
+                />
+            </div>
+        </el-card>
 
     <!-- 添加或修改{{ functionName }}对话框 -->
     <el-dialog :title="title" v-model="open" width="800px" append-to-body>
@@ -275,7 +276,9 @@
 
 <script setup name="{{ BusinessName }}">
 import { list{{ BusinessName }}, get{{ BusinessName }}, del{{ BusinessName }}, add{{ BusinessName }}, update{{ BusinessName }} } from "@/api/{{ moduleName }}/{{ businessName }}";
-
+import { listAllTable } from '@/api/system/table'
+import TableSetup from '@/components/TableSetup'
+import AutoTable from '@/components/AutoTable'
 const { proxy } = getCurrentInstance();
 {% if dicts != '' %}
 {% set dictsNoSymbol = dicts.replace("'", "") %}
@@ -302,6 +305,11 @@ const title = ref("");
     const daterange{{ column.pythonField | snake_to_pascal_case }} = ref([]);
   {% endif %}
 {% endfor %}
+
+const columns = ref([])
+const stripe = ref(true)
+const isTable = ref(true)
+const tableHeight = ref(500)
 
 const data = reactive({
   form: {},
@@ -351,6 +359,16 @@ function getList() {
     total.value = response.total;
     loading.value = false;
   });
+}
+
+function getColumns() {
+    listAllTable({ tableName: {{ tableName }} })
+        .then((response) => {
+            columns.value = response.data
+        })
+        .then(() => {
+            getList()
+        })
 }
 
 // 取消按钮
@@ -510,5 +528,32 @@ function handleExport() {
   }, `{{ businessName }}_${new Date().getTime()}.xlsx`)
 }
 
-getList();
+//表格全屏
+function onfullTable() {
+    proxy.$refs.tSetup.onFull(proxy.$refs.fullTable.$el)
+}
+//表格刷新
+function onRefresh() {
+    getList()
+}
+//搜索框显示隐藏
+function onSearchChange() {
+    showSearch.value = !showSearch.value
+}
+
+function onStripe(val) {
+    stripe.value = val
+}
+//改变表头数据
+function onChange(val) {
+    columns.value = val
+}
+
+//改变表格宽度
+function onColumnWidthChange(column) {
+    proxy.$refs.tSetup.tableWidth(column)
+}
+
+getColumns()
+
 </script>

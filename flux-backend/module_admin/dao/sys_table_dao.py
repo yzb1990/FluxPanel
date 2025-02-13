@@ -40,7 +40,7 @@ class SysTableDao:
                 SysTable.del_flag == '0',
                 eval(data_scope_sql) if data_scope_sql else True,
             )
-            .order_by(desc(SysTable.create_time))
+            .order_by(SysTable.table_name, SysTable.sequence)
             .distinct()
         )
         sys_table_list = await PageUtil.paginate(db, query, query_object.page_num, query_object.page_size, is_page)
@@ -163,3 +163,13 @@ class SysTableDao:
         return [
             GenTableModel(tableName=row[0], tableComment=row[1], createTime=row[2], updateTime=row[3]) for row in rows
         ]
+
+    @classmethod
+    async def get_sys_table_list_by_ids(cls,  db: AsyncSession, column_ids: List[int]):
+
+        sys_table_columns = (((await db.execute(
+            select(SysTable)
+            .where(SysTable.id.in_(column_ids))))
+                      .scalars())
+                     .all())
+        return sys_table_columns
