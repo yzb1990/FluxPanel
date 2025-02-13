@@ -2,6 +2,7 @@ from fastapi import APIRouter
 
 from module_admin.controller.cache_controller import cacheController
 from module_admin.controller.captcha_controller import captchaController
+from module_admin.controller.car_driver_controller import carDriverController
 from module_admin.controller.car_info_controller import carInfoController
 from module_admin.controller.common_controller import commonController
 from module_admin.controller.config_controller import configController
@@ -45,6 +46,7 @@ admin_controllers = [
     {'router': homeRouter, 'tags': ['产品官网']},
     {'router': carInfoController, 'tags': ['测试代码生成']},
     {'router': partnerInfoController, 'tags': ['测试代码生成']},
+    {'router': carDriverController, 'tags': ['测试代码生成']},
 ]
 
 app_controllers = [
