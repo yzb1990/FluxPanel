@@ -15,6 +15,11 @@
                     <el-icon><RefreshRight /></el-icon>
                 </div>
             </el-tooltip>
+            <el-tooltip effect="dark" content="搜索显隐" placement="top">
+                <div class="table-toolbar-right-icon" @click="onSearchChange">
+                    <el-icon><Search /></el-icon>
+                </div>
+            </el-tooltip>
             <el-tooltip
                 effect="dark"
                 content="表格设置"
@@ -223,6 +228,10 @@ export default {
             emit('onRefresh')
         }
 
+        const onSearchChange = () => {
+            emit('onSearchChange')
+        }
+
         const onDragStart = () => {
             backupColumns.value = [...sonColumns.value]
         }
@@ -312,6 +321,7 @@ export default {
             popoverVisible,
             onStripe,
             onRefresh,
+            onSearchChange,
             onUpdate,
             onDragStart,
             onAlign,

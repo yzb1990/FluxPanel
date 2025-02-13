@@ -77,6 +77,7 @@
                 @onRefresh="onRefresh"
                 @onChange="onChange"
                 @onfullTable="onfullTable"
+                @onSearchChange="onSearchChange"
                 :columns="columns"
                 :isTable="isTable"
             >
@@ -424,6 +425,11 @@ function onfullTable() {
 function onRefresh() {
     getList()
 }
+//搜索框显示隐藏
+function onSearchChange() {
+    showSearch.value = !showSearch.value
+}
+
 function onStripe(val) {
     stripe.value = val
 }
