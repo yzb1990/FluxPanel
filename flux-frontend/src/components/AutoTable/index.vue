@@ -63,6 +63,14 @@ export default {
             { immediate: true, deep: true }
         )
 
+        watch(
+            () => props.stripe,
+            (newVal) => {
+                stripe.value = newVal
+            },
+            { immediate: true, deep: true }
+        )
+
         const headerDragend = (newWidth, oldWidth, column, event) => {
             for (var i = 0; i < sonColumns.value.length; i++) {
                 if (sonColumns.value[i].prop === column.property) {
