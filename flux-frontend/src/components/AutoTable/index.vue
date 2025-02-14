@@ -74,7 +74,7 @@ export default {
         const headerDragend = (newWidth, oldWidth, column, event) => {
             for (var i = 0; i < sonColumns.value.length; i++) {
                 if (sonColumns.value[i].prop === column.property) {
-                    sonColumns.value[i].width = newWidth
+                    sonColumns.value[i].width = parseInt(newWidth)
                     emit('onColumnWidthChange', sonColumns.value[i])
                 }
             }
