@@ -62,10 +62,25 @@ class SqlalchemyUtil:
         elif isinstance(obj, dict):
             base_dict = obj.copy()
         if transform_case == 'snake_to_camel':
-            return {CamelCaseUtil.snake_to_camel(k): v for k, v in base_dict.items()}
+            temp_dict: dict = {}
+            for k, v in base_dict.items():
+                if isinstance(v, Base):
+                    temp_v = cls.base_to_dict(v, transform_case)
+                    temp_dict[CamelCaseUtil.snake_to_camel(k)] = temp_v
+                else:
+                    temp_dict[CamelCaseUtil.snake_to_camel(k)] = v
+            return temp_dict
+            # return {CamelCaseUtil.snake_to_camel(k): v for k, v in base_dict.items()}
         elif transform_case == 'camel_to_snake':
-            return {SnakeCaseUtil.camel_to_snake(k): v for k, v in base_dict.items()}
-
+            temp_dict: dict = {}
+            for k, v in base_dict.items():
+                if isinstance(v, Base):
+                    temp_v = cls.base_to_dict(v, transform_case)
+                    temp_dict[SnakeCaseUtil.camel_to_snake(k)] = temp_v
+                else:
+                    temp_dict[SnakeCaseUtil.camel_to_snake(k)] = v
+            return temp_dict
+            # return {SnakeCaseUtil.camel_to_snake(k): v for k, v in base_dict.items()}
         return base_dict
 
     @classmethod
