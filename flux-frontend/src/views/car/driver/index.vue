@@ -34,6 +34,15 @@
                 @keyup.enter="handleQuery"
               />
             </el-form-item>
+
+            <el-form-item label="价格" prop="price">
+              <el-input
+                v-model="queryParams.price"
+                placeholder="请输入价格"
+                clearable
+                @keyup.enter="handleQuery"
+              />
+            </el-form-item>
       <el-form-item>
         <el-button type="primary" icon="Search" @click="handleQuery">搜索</el-button>
         <el-button icon="Refresh" @click="resetQuery">重置</el-button>
@@ -107,6 +116,11 @@
 
 
 
+                    <template #image="{ row }">
+                      <image-preview :src="row.image" :width="50" :height="50"/>
+                    </template>
+
+
 
 
                     <template #updateTime="{ row }">
@@ -152,7 +166,7 @@
                 </el-form-item>
 
                 <el-form-item label="图片" prop="image">
-                  <el-input v-model="form.image" placeholder="请输入图片" />
+                  <image-upload v-model="form.image"/>
                 </el-form-item>
 
                 <el-form-item label="所在位置" prop="location">
@@ -209,12 +223,17 @@ const data = reactive({
     carType: null,
     driverYears: null,
     name: null,
+    price: null,
   },
   rules: {
         age: [
           { required: true, message: "年龄不能为空", trigger: "blur" }
         ],        carType: [
           { required: true, message: "车辆类型不能为空", trigger: "change" }
+        ],        createBy: [
+          { required: true, message: "创建者不能为空", trigger: "blur" }
+        ],        deptId: [
+          { required: true, message: "部门id不能为空", trigger: "blur" }
         ],        driverYears: [
           { required: true, message: "驾龄不能为空", trigger: "blur" }
         ],        name: [
@@ -255,7 +274,7 @@ function cancel() {
 // 表单重置
 function reset() {
   form.value = {
-        age: null,        carType: null,        createTime: null,        delFlag: null,        driverYears: null,        id: null,        image: null,        location: null,        name: null,        price: null,        updateTime: null  };
+        age: null,        carType: null,        createBy: null,        createTime: null,        delFlag: null,        deptId: null,        driverYears: null,        id: null,        image: null,        location: null,        name: null,        price: null,        updateTime: null  };
   proxy.resetForm("driverRef");
 }
 
