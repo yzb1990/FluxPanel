@@ -34,8 +34,9 @@ class CarDriverDao:
             select(CarDriver)
             .where(
                 CarDriver.car_type == query_object.car_type if query_object.car_type else True,
-                CarDriver.driver_years >= query_object.driver_years if query_object.driver_years else True,
-                CarDriver.name == query_object.name if query_object.name else True,
+                CarDriver.driver_years == query_object.driver_years if query_object.driver_years else True,
+                CarDriver.name.like(f"%{query_object.name}%") if query_object.name else True,
+                CarDriver.price == query_object.price if query_object.price else True,
                 CarDriver.del_flag == '0',
                 eval(data_scope_sql) if data_scope_sql else True,
             )

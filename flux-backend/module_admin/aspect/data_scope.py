@@ -19,7 +19,7 @@ class GetDataScope:
         self,
         query_alias: Optional[str] = '',
         db_alias: Optional[str] = 'db',
-        user_alias: Optional[str] = 'user_id',
+        user_alias: Optional[str] = 'create_by',
         dept_alias: Optional[str] = 'dept_id',
     ):
         """

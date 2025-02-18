@@ -4,6 +4,7 @@ from typing import List
 from datetime import datetime, time
 from sqlalchemy import and_, delete, desc, func, or_, select, update, text
 from sqlalchemy.ext.asyncio import AsyncSession
+from module_admin.entity.do.dept_do import SysDept
 from module_admin.entity.do.sys_table_do import SysTable
 from module_admin.entity.vo.sys_table_vo import SysTablePageModel, SysTableModel, DbTablePageModel
 from module_gen.entity.vo.gen_table_vo import GenTablePageModel, GenTableModel
@@ -28,7 +29,6 @@ class SysTableDao:
     @classmethod
     async def get_sys_table_list(cls, db: AsyncSession,
                              query_object: SysTablePageModel,
-                             data_scope_sql: str = None,
                              is_page: bool = False) -> [list | PageResponseModel]:
 
         query = (
@@ -37,8 +37,7 @@ class SysTableDao:
                 SysTable.field_name.like(f"%{query_object.field_name}%") if query_object.field_name else True,
                 SysTable.prop.like(f"%{query_object.prop}%") if query_object.prop else True,
                 SysTable.table_name.like(f"%{query_object.table_name}%") if query_object.table_name else True,
-                SysTable.del_flag == '0',
-                eval(data_scope_sql) if data_scope_sql else True,
+                SysTable.del_flag == '0'
             )
             .order_by(SysTable.table_name, SysTable.sequence)
             .distinct()

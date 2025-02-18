@@ -39,17 +39,17 @@ class GenConstants:
                   "bigint", "float", "float", "double", "decimal"]
     
     # 页面不需要编辑字段
-    COLUMN_NAME_NOT_EDIT = ["id", "create_by", "create_time", "del_flag", "update_time"]
+    COLUMN_NAME_NOT_EDIT = ["id", "create_by", "dept_id", "create_time", "del_flag", "update_time"]
     
     # 页面不需要显示的列表字段
-    COLUMN_NAME_NOT_LIST = ["id", "create_by", "create_time", "del_flag", "update_by"]
+    COLUMN_NAME_NOT_LIST = ["id", "create_by", "dept_id", "create_time", "del_flag", "update_by"]
     
     # 页面不需要查询字段
-    COLUMN_NAME_NOT_QUERY = ["id", "create_by", "create_time", "del_flag", "update_by",
+    COLUMN_NAME_NOT_QUERY = ["id", "create_by", "dept_id", "create_time", "del_flag", "update_by",
                            "update_time", "remark"]
     
     # Entity基类字段
-    BASE_ENTITY = ["createBy", "createTime", "updateBy", "updateTime", "remark"]
+    BASE_ENTITY = ['id', 'create_time', 'update_time', "create_by", "dept_id", 'del_flag']
     
     # Tree基类字段
     TREE_ENTITY = ["parentName", "parentId", "orderNum", "ancestors"]

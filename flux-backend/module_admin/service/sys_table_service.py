@@ -18,8 +18,8 @@ class SysTableService:
     """
 
     @classmethod
-    async def get_sys_table_list(cls, query_db: AsyncSession, query_object: SysTablePageModel, data_scope_sql: str, is_page=True) -> [list | PageResponseModel]:
-        sys_table_list = await SysTableDao.get_sys_table_list(query_db, query_object, data_scope_sql, is_page=is_page)
+    async def get_sys_table_list(cls, query_db: AsyncSession, query_object: SysTablePageModel,  is_page=True) -> [list | PageResponseModel]:
+        sys_table_list = await SysTableDao.get_sys_table_list(query_db, query_object, is_page=is_page)
         return sys_table_list
 
 

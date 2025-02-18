@@ -25,7 +25,7 @@ async def get_car_driver_list(
         request: Request,
         query_db: AsyncSession = Depends(get_db),
         page_query: CarDriverPageModel = Depends( CarDriverPageModel.as_query),
-        data_scope_sql: str = Depends(GetDataScope('SysDept'))
+        data_scope_sql: str = Depends(GetDataScope('CarDriver'))
 ):
     car_driver_result = await CarDriverService.get_car_driver_list(query_db, page_query, data_scope_sql)
 
@@ -36,7 +36,7 @@ async def get_car_driver_by_id(
         request: Request,
         carDriverId: int,
         query_db: AsyncSession = Depends(get_db),
-        data_scope_sql: str = Depends(GetDataScope('SysDept'))
+        data_scope_sql: str = Depends(GetDataScope('CarDriver'))
 ):
     car_driver = await CarDriverService.get_car_driver_by_id(query_db, carDriverId)
     return ResponseUtil.success(data=car_driver)
@@ -50,6 +50,9 @@ async def add_car_driver (
     query_db: AsyncSession = Depends(get_db),
     current_user: CurrentUserModel = Depends(LoginService.get_current_user),
 ):
+
+    add_model.create_by = current_user.user.user_id
+    add_model.dept_id = current_user.user.dept_id
     add_dict_type_result = await CarDriverService.add_car_driver(query_db, add_model)
     return ResponseUtil.success(data=add_dict_type_result)
 
@@ -83,7 +86,7 @@ async def export_car_driver(
     request: Request,
     car_driver_form: CarDriverPageModel = Form(),
     query_db: AsyncSession = Depends(get_db),
-    data_scope_sql: str = Depends(GetDataScope('SysDept')),
+    data_scope_sql: str = Depends(GetDataScope('CarDriver')),
 ):
     # 获取全量数据
     export_result = await CarDriverService.export_car_driver_list(

@@ -1,11 +1,20 @@
 # -*- coding:utf-8 -*-
+import datetime
 
-from sqlalchemy import Column, ForeignKey, String, DateTime, Integer
-from config.database import BaseMixin, Base
+from sqlalchemy import Column, ForeignKey, String, DateTime, Integer, text
+from config.database import Base
 
 
-class SysTable(Base, BaseMixin):
+class SysTable(Base):
     __tablename__ = "sys_table"
+
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    create_time = Column(DateTime, nullable=False, default=datetime.datetime.now, comment='创建时间')
+    update_time = Column(DateTime, nullable=False, default=datetime.datetime.now,
+                         onupdate=datetime.datetime.now, index=True, comment='更新时间')
+    del_flag = Column(String(1), nullable=False, default='0', server_default=text("'0'"),
+                      comment='删除标志（0代表存在 2代表删除）')
+
 
     align = Column(String(255), nullable=False, default='left', comment='对其方式')
 

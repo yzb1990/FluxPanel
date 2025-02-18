@@ -25,7 +25,7 @@ async def get_{{ tableName }}_list(
         request: Request,
         query_db: AsyncSession = Depends(get_db),
         page_query: {{ tableName|snake_to_pascal_case }}PageModel = Depends( {{ tableName|snake_to_pascal_case }}PageModel.as_query),
-        data_scope_sql: str = Depends(GetDataScope('SysDept'))
+        data_scope_sql: str = Depends(GetDataScope('{{ tableName|snake_to_pascal_case }}'))
 ):
     {{ tableName }}_result = await {{ tableName|snake_to_pascal_case }}Service.get_{{ tableName }}_list(query_db, page_query, data_scope_sql)
 
@@ -36,7 +36,7 @@ async def get_{{ tableName }}_by_id(
         request: Request,
         {{ tableName|snake_to_camel }}Id: int,
         query_db: AsyncSession = Depends(get_db),
-        data_scope_sql: str = Depends(GetDataScope('SysDept'))
+        data_scope_sql: str = Depends(GetDataScope('{{ tableName|snake_to_pascal_case }}'))
 ):
     {{ tableName }} = await {{ tableName|snake_to_pascal_case }}Service.get_{{ tableName }}_by_id(query_db, {{ tableName|snake_to_camel }}Id)
     return ResponseUtil.success(data={{ tableName }})
@@ -50,6 +50,9 @@ async def add_{{ tableName }} (
     query_db: AsyncSession = Depends(get_db),
     current_user: CurrentUserModel = Depends(LoginService.get_current_user),
 ):
+
+    add_model.create_by = current_user.user.user_id
+    add_model.dept_id = current_user.user.dept_id
     add_dict_type_result = await {{ tableName|snake_to_pascal_case }}Service.add_{{ tableName }}(query_db, add_model)
     return ResponseUtil.success(data=add_dict_type_result)
 
@@ -83,7 +86,7 @@ async def export_{{ tableName }}(
     request: Request,
     {{ tableName }}_form: {{ tableName|snake_to_pascal_case }}PageModel = Form(),
     query_db: AsyncSession = Depends(get_db),
-    data_scope_sql: str = Depends(GetDataScope('SysDept')),
+    data_scope_sql: str = Depends(GetDataScope('{{ tableName|snake_to_pascal_case }}')),
 ):
     # 获取全量数据
     export_result = await {{ tableName|snake_to_pascal_case }}Service.export_{{ tableName }}_list(

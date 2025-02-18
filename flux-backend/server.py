@@ -48,8 +48,8 @@ app = FastAPI(
 @app.middleware("http")
 async def block_post_requests(request: Request, call_next):
     # 检查请求方法是否为 POST
-    # if request.url.path not in ("/logout", "/login") and request.method in ("POST", "PUT", "PATCH", "DELETE"):
-    #     return ResponseUtil.error(msg="演示环境，暂不允许修改数据")
+    if request.url.path not in ("/logout", "/login") and request.method in ("POST", "PUT", "PATCH", "DELETE"):
+        return ResponseUtil.error(msg="演示环境，暂不允许修改数据")
     # 继续处理其他请求
     response = await call_next(request)
     return response

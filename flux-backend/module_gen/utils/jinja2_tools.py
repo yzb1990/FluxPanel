@@ -19,7 +19,7 @@ def snake_2_colon(snake_str: str) -> str:
 
 def is_base_column(column_name: str) -> bool:
     """判断是否是基础字段"""
-    return column_name in ('id', 'create_time', 'update_time', 'del_flag')
+    return column_name in GenConstants.BASE_ENTITY
 
 def get_sqlalchemy_type(mysql_field_type: str) -> str:
     """mysql_field_type 转sqlalchemy类型"""

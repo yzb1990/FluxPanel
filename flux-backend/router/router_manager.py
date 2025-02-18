@@ -3,8 +3,6 @@ from fastapi import APIRouter
 from module_admin.controller.cache_controller import cacheController
 from module_admin.controller.captcha_controller import captchaController
 from module_admin.controller.car_driver_controller import carDriverController
-from module_admin.controller.car_info_controller import carInfoController
-from module_admin.controller.car_seller_controller import carSellerController
 from module_admin.controller.common_controller import commonController
 from module_admin.controller.config_controller import configController
 from module_admin.controller.dept_controller import deptController
@@ -15,7 +13,6 @@ from module_admin.controller.job_controller import jobController
 from module_admin.controller.menu_controller import menuController
 from module_admin.controller.notice_controller import noticeController
 from module_admin.controller.online_controller import onlineController
-from module_admin.controller.partner_info_controller import partnerInfoController
 from module_admin.controller.post_controler import postController
 from module_admin.controller.role_controller import roleController
 from module_admin.controller.server_controller import serverController
@@ -45,10 +42,8 @@ admin_controllers = [
     {'router': commonController, 'tags': ['通用模块']},
     {'router': gen1Controller, 'tags': ['系统工具-代码生成']},
     {'router': homeRouter, 'tags': ['产品官网']},
-    {'router': carInfoController, 'tags': ['测试代码生成']},
-    {'router': partnerInfoController, 'tags': ['测试代码生成']},
-    {'router': carDriverController, 'tags': ['测试代码生成']},
-    {'router': carSellerController, 'tags': ['测试代码生成']},
+    {'router': carDriverController, 'tags': ['测试业务']},
+
 
 
 ]

@@ -37,10 +37,9 @@ async def get_sys_table_list(
 async def get_sys_table_list(
         request: Request,
         query_db: AsyncSession = Depends(get_db),
-        page_query: SysTablePageModel = Depends( SysTablePageModel.as_query),
-        data_scope_sql: str = Depends(GetDataScope('SysDept'))
+        page_query: SysTablePageModel = Depends( SysTablePageModel.as_query)
 ):
-    sys_table_result = await SysTableService.get_sys_table_list(query_db, page_query, data_scope_sql, is_page=False)
+    sys_table_result = await SysTableService.get_sys_table_list(query_db, page_query, is_page=False)
     return ResponseUtil.success(data=sys_table_result)
 
 @sysTableController.get('/db/list', dependencies=[Depends(CheckUserInterfaceAuth('tool:gen:list'))])
