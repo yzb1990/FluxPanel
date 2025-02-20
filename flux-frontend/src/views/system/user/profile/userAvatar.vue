@@ -87,6 +87,7 @@
 import 'vue-cropper/dist/index.css'
 import { VueCropper } from 'vue-cropper'
 import { uploadAvatar } from '@/api/system/user'
+import { commonUpload } from '@/api/tool/upload'
 import useUserStore from '@/store/modules/user'
 
 const userStore = useUserStore()
@@ -150,10 +151,10 @@ function beforeUpload(file) {
 function uploadImg() {
     proxy.$refs.cropper.getCropBlob((data) => {
         let formData = new FormData()
-        formData.append('avatarfile', data, options.filename)
-        uploadAvatar(formData).then((response) => {
+        formData.append('file', data, options.filename)
+        commonUpload(formData).then((response) => {
             open.value = false
-            options.img = import.meta.env.VITE_APP_BASE_API + response.imgUrl
+            options.img = response.url
             userStore.avatar = options.img
             proxy.$modal.msgSuccess('修改成功')
             visible.value = false
