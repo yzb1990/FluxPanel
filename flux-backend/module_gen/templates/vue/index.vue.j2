@@ -274,7 +274,7 @@
   </div>
 </template>
 
-<script setup name="{{ BusinessName }}">
+<script setup name="{{ tableName|snake_to_pascal_case }}">
 import { list{{ BusinessName }}, get{{ BusinessName }}, del{{ BusinessName }}, add{{ BusinessName }}, update{{ BusinessName }} } from "@/api/{{ moduleName }}/{{ businessName }}";
 import { listAllTable } from '@/api/system/table'
 import TableSetup from '@/components/TableSetup'

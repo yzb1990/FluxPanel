@@ -510,7 +510,8 @@ class RouterUtil:
         :return: 路由名称（驼峰格式）
         """
         router_name = name if name else path
-        return router_name.capitalize()
+        return CamelCaseUtil.snake_to_pascal_case(router_name)
+
 
     @classmethod
     def get_router_path(cls, menu: MenuTreeModel):

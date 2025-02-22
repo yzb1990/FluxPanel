@@ -136,6 +136,11 @@ class CamelCaseUtil:
             return snake_str
 
     @classmethod
+    def snake_to_pascal_case(cls, snake_str: str):
+        """将下划线命名 (snake_case) 转换大驼峰"""
+        return ''.join(word.capitalize() for word in snake_str.split('_'))
+
+    @classmethod
     def transform_result(cls, result: Any):
         """
         针对不同类型将下划线形式(snake_case)批量转换为小驼峰形式(camelCase)方法
