@@ -87,6 +87,7 @@
 import 'vue-cropper/dist/index.css'
 import { VueCropper } from 'vue-cropper'
 import { uploadAvatar } from '@/api/system/user'
+import { updateUserProfile } from '@/api/system/user'
 import { commonUpload } from '@/api/tool/upload'
 import useUserStore from '@/store/modules/user'
 
@@ -152,13 +153,19 @@ function uploadImg() {
     proxy.$refs.cropper.getCropBlob((data) => {
         let formData = new FormData()
         formData.append('file', data, options.filename)
-        commonUpload(formData).then((response) => {
-            open.value = false
-            options.img = response.url
-            userStore.avatar = options.img
-            proxy.$modal.msgSuccess('修改成功')
-            visible.value = false
-        })
+        commonUpload(formData)
+            .then((response) => {
+                open.value = false
+                options.img = response.url
+                userStore.avatar = options.img
+                visible.value = false
+                return options.img
+            })
+            .then((imageUrl) => {
+                updateUserProfile({ avatar: imageUrl }).then(() => {
+                    proxy.$modal.msgSuccess('修改成功')
+                })
+            })
     })
 }
 /** 实时预览 */
