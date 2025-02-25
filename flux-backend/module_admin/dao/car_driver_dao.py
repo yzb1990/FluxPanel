@@ -2,6 +2,8 @@
 
 from typing import List
 from datetime import datetime, time
+
+from module_admin.entity.do.role_do import SysRoleDept
 from sqlalchemy import and_, delete, desc, func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from module_admin.entity.do.car_driver_do import CarDriver
