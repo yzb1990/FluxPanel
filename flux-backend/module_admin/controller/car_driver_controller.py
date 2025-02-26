@@ -56,7 +56,7 @@ async def add_car_driver (
     add_dict_type_result = await CarDriverService.add_car_driver(query_db, add_model)
     return ResponseUtil.success(data=add_dict_type_result)
 
-@carDriverController.put('/update', dependencies=[Depends(CheckUserInterfaceAuth('car:driver:update'))])
+@carDriverController.put('/update', dependencies=[Depends(CheckUserInterfaceAuth('car:driver:edit'))])
 @Log(title='car_driver', business_type=BusinessType.UPDATE)
 async def update_car_driver(
     request: Request,
