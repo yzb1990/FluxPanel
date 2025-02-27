@@ -36,7 +36,7 @@ class SysTableDao:
             .where(
                 SysTable.field_name.like(f"%{query_object.field_name}%") if query_object.field_name else True,
                 SysTable.prop.like(f"%{query_object.prop}%") if query_object.prop else True,
-                SysTable.table_name.like(f"%{query_object.table_name}%") if query_object.table_name else True,
+                SysTable.table_name == query_object.table_name if query_object.table_name else True,
                 SysTable.del_flag == '0'
             )
             .order_by(SysTable.table_name, SysTable.sequence)
