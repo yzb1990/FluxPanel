@@ -46,7 +46,8 @@ class SqlalchemyUtil:
 
     @classmethod
     def base_to_dict(
-        cls, obj: Union[Base, Dict], transform_case: Literal['no_case', 'snake_to_camel', 'camel_to_snake'] = 'no_case'
+            cls, obj: Union[Base, Dict],
+            transform_case: Literal['no_case', 'snake_to_camel', 'camel_to_snake'] = 'no_case'
     ) -> dict[str, Any]:
         """
         将sqlalchemy模型对象转换为字典
@@ -67,6 +68,12 @@ class SqlalchemyUtil:
                 if isinstance(v, Base):
                     temp_v = cls.base_to_dict(v, transform_case)
                     temp_dict[CamelCaseUtil.snake_to_camel(k)] = temp_v
+                elif isinstance(v, dict):
+                    temp_v = cls.base_to_dict(v, transform_case)
+                    temp_dict[CamelCaseUtil.snake_to_camel(k)] = temp_v
+                elif isinstance(v, list):
+                    temp_v = [cls.base_to_dict(v_item, transform_case) for v_item in v]
+                    temp_dict[CamelCaseUtil.snake_to_camel(k)] = temp_v
                 else:
                     temp_dict[CamelCaseUtil.snake_to_camel(k)] = v
             return temp_dict
@@ -77,10 +84,17 @@ class SqlalchemyUtil:
                 if isinstance(v, Base):
                     temp_v = cls.base_to_dict(v, transform_case)
                     temp_dict[SnakeCaseUtil.camel_to_snake(k)] = temp_v
+                elif isinstance(v, dict):
+                    temp_v = cls.base_to_dict(v, transform_case)
+                    temp_dict[SnakeCaseUtil.camel_to_snake(k)] = temp_v
+                elif isinstance(v, list):
+                    temp_v = [cls.base_to_dict(v_item, transform_case) for v_item in v]
+                    temp_dict[SnakeCaseUtil.camel_to_snake(k)] = temp_v
                 else:
                     temp_dict[SnakeCaseUtil.camel_to_snake(k)] = v
             return temp_dict
             # return {SnakeCaseUtil.camel_to_snake(k): v for k, v in base_dict.items()}
+
         return base_dict
 
     @classmethod
