@@ -1,7 +1,7 @@
 <template>
     <div class="user-info-head" @click="editCropper()">
         <img
-            :src="options.img"
+            :src="fullUrl(options.img)"
             title="点击上传头像"
             class="img-circle img-lg"
         />

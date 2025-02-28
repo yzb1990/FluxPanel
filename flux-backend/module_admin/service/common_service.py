@@ -48,7 +48,7 @@ class CommonService:
                     file_name=f'{UploadConfig.UPLOAD_PREFIX}/{relative_path}/{filename}',
                     new_file_name=filename,
                     original_filename=file.filename,
-                    url=f'{UploadConfig.UPLOAD_PREFIX[1:]}/{relative_path}/{filename}',
+                    url=f'{UploadConfig.UPLOAD_PREFIX}/{relative_path}/{filename}',
                 ),
                 message='上传成功',
             )

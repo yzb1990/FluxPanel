@@ -121,7 +121,11 @@
                 </template>
 
                 <template #image="{ row }">
-                    <image-preview :src="row.image" :width="50" :height="50" />
+                    <image-preview
+                        :src="fullUrl(row.image)"
+                        :width="50"
+                        :height="50"
+                    />
                 </template>
 
                 <template #updateTime="{ row }">
