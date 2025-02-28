@@ -126,7 +126,7 @@ function logout() {
     })
         .then(() => {
             userStore.logOut().then(() => {
-                location.href = '/index'
+                location.href = location.pathname;
             })
         })
         .catch(() => {})

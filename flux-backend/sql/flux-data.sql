@@ -13,6 +13,11 @@
 
  Date: 19/02/2025 00:05:11
 */
+-- 创建数据库
+CREATE DATABASE IF NOT EXISTS `flux-data`;
+
+-- 使用数据库
+USE `flux-data`;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
