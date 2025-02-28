@@ -18,7 +18,7 @@ class CommonService:
     """
 
     @classmethod
-    async def upload_service(cls, request: Request, file: UploadFile):
+    async def upload_local(cls, request: Request, file: UploadFile):
         """
         通用上传service
 
@@ -48,7 +48,7 @@ class CommonService:
                     file_name=f'{UploadConfig.UPLOAD_PREFIX}/{relative_path}/{filename}',
                     new_file_name=filename,
                     original_filename=file.filename,
-                    url=f'{request.base_url}{UploadConfig.UPLOAD_PREFIX[1:]}/{relative_path}/{filename}',
+                    url=f'{UploadConfig.UPLOAD_PREFIX[1:]}/{relative_path}/{filename}',
                 ),
                 message='上传成功',
             )

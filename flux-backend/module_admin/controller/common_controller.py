@@ -1,4 +1,6 @@
 from fastapi import APIRouter, BackgroundTasks, Depends, File, Query, Request, UploadFile
+
+from config.env import OSSConfig
 from module_admin.service.common_service import CommonService
 from module_admin.service.login_service import LoginService
 from utils.log_util import logger
@@ -9,9 +11,11 @@ commonController = APIRouter(prefix='/common', dependencies=[Depends(LoginServic
 
 @commonController.post('/upload')
 async def common_upload(request: Request, file: UploadFile = File(...)):
-    upload_result = await CommonService.upload_oss(request, file, oss_folder = "category_image/")
+    if OSSConfig.UPLOAD_METHOD == 'oss':
+        upload_result = await CommonService.upload_oss(request, file, oss_folder = "category_image/")
+    else:
+        upload_result = await CommonService.upload_local(request, file)
     logger.info('上传成功')
-
     return ResponseUtil.success(model_content=upload_result.result)
 
 

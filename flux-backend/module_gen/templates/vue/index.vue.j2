@@ -132,7 +132,7 @@
                     </template>
                 {% elif column.isList == "1" and column.htmlType == "imageUpload" %}
                     <template #{{ pythonField }}="{ row }">
-                      <image-preview :src="row.{{ pythonField }}" :width="50" :height="50"/>
+                      <image-preview :src="fullUrl(row.{{ pythonField }})" :width="50" :height="50"/>
                     </template>
                 {% elif column.isList == "1" and column.dictType != "" %}
                     <template #{{ pythonField }}="{ row }">

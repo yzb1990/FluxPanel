@@ -70,16 +70,16 @@ class ALIOssSettings(BaseSettings):
     ALI_OSS_END_POINT: str = 'xxxx'
     ALI_OSS_PRE: str = 'xxxx'
     ALI_OSS_BUCKET: str = 'xxxx'
+    UPLOAD_METHOD: str = 'xxxx'
 
 class UploadSettings:
     """
     上传配置
     """
-
-    UPLOAD_PREFIX = '/profile'
-    UPLOAD_PATH = 'flux_admin/upload_path'
-    UPLOAD_MACHINE = 'A'
-    DEFAULT_ALLOWED_EXTENSION = [
+    UPLOAD_PREFIX: str = '/profile'
+    UPLOAD_PATH: str = 'flux_admin/upload_path'
+    UPLOAD_MACHINE: str = 'A'
+    DEFAULT_ALLOWED_EXTENSION: list = [
         # 图片
         'bmp',
         'gif',
@@ -108,7 +108,7 @@ class UploadSettings:
         # pdf
         'pdf',
     ]
-    DOWNLOAD_PATH = 'flux_admin/download_path'
+    DOWNLOAD_PATH: str = 'flux_admin/download_path'
 
     def __init__(self):
         if not os.path.exists(self.UPLOAD_PATH):
