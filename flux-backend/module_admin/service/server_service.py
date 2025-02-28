@@ -79,6 +79,7 @@ class ServerService:
         io = psutil.disk_partitions()
         sys_files = []
         for i in io:
+            if not os.path.exists(i.device): continue
             o = psutil.disk_usage(i.device)
             disk_data = SysFiles(
                 dirName=i.device,
