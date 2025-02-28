@@ -75,7 +75,9 @@ FluxPanel是一套全部开源的快速开发平台，毫无保留给个人及�
 
 ## 项目开发及发布相关
 
-### 开发
+### 方式一：命令行构建
+
+#### 开发
 
 ```bash
 # 克隆项目
@@ -85,7 +87,7 @@ git clone https://github.com/Richard0403/FluxPanel.git
 cd FluxPanel
 ```
 
-#### 前端
+##### 前端
 
 本地node版本为v18.20.5， 其他版本可做尝试，不保证均可正常运行
 ```bash
@@ -102,7 +104,7 @@ npm install --registry=https://registry.npmmirror.com
 npm run dev 或 yarn dev
 ```
 
-#### 后端
+##### 后端
 
 建议使用aconda管理环境， python版本推荐3.11
 
@@ -114,7 +116,7 @@ pip3 install -r requirements.txt
 
 # 配置环境
 在.env.dev（开发环境）文件中配置开发环境的数据库和redis，
-.env.prod未正式环境使用， 复制.env.dev-templates文件即可
+.env.prod未正式环境使用， 复制.env.prod-templates文件即可
 
 # 运行sql文件
 1.新建数据库flux-data(默认，可修改)
@@ -125,7 +127,7 @@ python3 app.py --env=dev
 
 ```
 
-#### 访问
+##### 访问
 
 ```bash
 # 默认账号密码
@@ -136,9 +138,9 @@ python3 app.py --env=dev
 地址：http://localhost:80
 ```
 
-### 发布
+#### 发布
 
-#### 前端
+##### 前端
 
 ```bash
 # 构建测试环境
@@ -148,7 +150,7 @@ npm run build:stage 或 yarn build:stage
 npm run build:prod 或 yarn build:prod
 ```
 
-#### 后端
+##### 后端
 
 ```bash
 # 配置环境
@@ -156,6 +158,71 @@ npm run build:prod 或 yarn build:prod
 
 # 运行后端
 python3 app.py --env=prod
+```
+
+### 方式二： 使用 Docker 一键启动
+
+#### 开发
+
+```bash
+# 克隆项目
+git clone https://github.com/Richard0403/FluxPanel.git
+
+# 进入项目根目录
+cd FluxPanel
+```
+
+##### 运行容器
+
+```bash
+# 配置环境
+复制flux-backend/.env.prod-docker-templates文件，命名为.env.dev，放到flux-backend中
+
+cd docker 
+
+# 启动容器
+docker compose up -d
+
+# 查看容器是否启动
+docker ps
+
+# 首次执行的时候会自动运行sql文件夹下的flux-data.sql，所以需要等待一会儿才能真正跑起来
+
+```
+
+##### 前端
+
+本地node版本为v18.20.5， 其他版本可做尝试，不保证均可正常运行
+```bash
+# 进入前端目录
+cd flux-frontend
+
+# 环境配置
+在 .env.development 中，设置 VITE_APP_PROXY_API = http://127.0.0.1/server
+在 .env.production 中，设置 VITE_APP_PROXY_API = /server
+
+# 安装依赖
+npm config set registry https://registry.npmmirror.com
+npm install -g pnpm
+
+pnpm install
+
+# 启动服务
+pnpm dev
+```
+
+
+#### 发布
+
+```bash
+# 环境配置
+在 .env.production 中，设置 VITE_APP_PROXY_API = /server
+
+cd flux-frontend
+pnpm run build:prod
+
+# 运行结束就配置好了
+访问 http://your-domain 就可以了
 ```
 
 ## 交流与赞助
