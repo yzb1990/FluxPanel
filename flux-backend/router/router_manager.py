@@ -16,6 +16,8 @@ from module_admin.controller.online_controller import onlineController
 from module_admin.controller.post_controler import postController
 from module_admin.controller.role_controller import roleController
 from module_admin.controller.server_controller import serverController
+from module_admin.controller.sys_form_controller import sysFormController
+from module_admin.controller.sys_form_data_controller import sysFormDataController
 from module_admin.controller.sys_table_controller import sysTableController
 from module_admin.controller.user_controller import userController
 from module_app.controller.app_login_controller import appLoginController
@@ -41,6 +43,8 @@ admin_controllers = [
     {'router': cacheController, 'tags': ['系统监控-缓存监控']},
     {'router': commonController, 'tags': ['通用模块']},
     {'router': gen1Controller, 'tags': ['系统工具-代码生成']},
+    {'router': sysFormController, 'tags': ['系统工具-表单构建']},
+    {'router': sysFormDataController, 'tags': ['系统工具-表单构建']},
     {'router': homeRouter, 'tags': ['产品官网']},
     {'router': carDriverController, 'tags': ['测试业务']},
 

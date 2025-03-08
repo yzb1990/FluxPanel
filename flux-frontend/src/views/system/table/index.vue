@@ -46,7 +46,7 @@
                 <el-button
                     type="primary"
                     plain
-                    icon="Plus"
+                    icon="Upload"
                     @click="openImportTable"
                     v-hasPermi="['sys:table:add']"
                     >导入</el-button
@@ -55,6 +55,16 @@
             <el-col :span="1.5">
                 <el-button
                     type="success"
+                    plain
+                    icon="Plus"
+                    @click="handleAdd"
+                    v-hasPermi="['sys:table:add']"
+                    >添加</el-button
+                >
+            </el-col>
+            <el-col :span="1.5">
+                <el-button
+                    type="info"
                     plain
                     icon="Edit"
                     :disabled="single"
