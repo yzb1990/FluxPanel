@@ -161,7 +161,7 @@ function submitForm() {
     formRef.value.validate((valid) => {
         if (!valid) return
         // 提交表单
-        let tempFormData = JSON.stringify(formData)
+        let tempFormData = JSON.stringify(formData.value)
         let params = {
             formName: '求职意向调查',
             formData: tempFormData

@@ -364,7 +364,7 @@ function buildexport(
       ${conf.formRef}.value.validate((valid) => {
         if (!valid) return
         // 提交表单
-        let tempFormData = JSON.stringify(${conf.formModel})
+        let tempFormData = JSON.stringify(${conf.formModel}.value)
             let params = {
                 formName: '${conf.remark}',
                 formData: tempFormData

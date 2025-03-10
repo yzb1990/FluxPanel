@@ -17,17 +17,16 @@ from utils.common_util import bytes2file_response
 from module_admin.entity.vo.sys_form_data_vo import SysFormDataPageModel, SysFormDataModel
 from module_admin.service.sys_form_data_service import SysFormDataService
 
-sysFormDataController = APIRouter(prefix='/sys/form_data', dependencies=[Depends(LoginService.get_current_user)])
+sysFormDataController = APIRouter(prefix='/sys/form_data')
 
 
-@sysFormDataController.get('/list', dependencies=[Depends(CheckUserInterfaceAuth('sys:form_data:list'))])
+@sysFormDataController.get('/list')
 async def get_sys_form_data_list(
         request: Request,
         query_db: AsyncSession = Depends(get_db),
-        page_query: SysFormDataPageModel = Depends( SysFormDataPageModel.as_query),
-        data_scope_sql: str = Depends(GetDataScope('SysFormData'))
+        page_query: SysFormDataPageModel = Depends( SysFormDataPageModel.as_query)
 ):
-    sys_form_data_result = await SysFormDataService.get_sys_form_data_list(query_db, page_query, data_scope_sql)
+    sys_form_data_result = await SysFormDataService.get_sys_form_data_list(query_db, page_query, None)
 
     return ResponseUtil.success(model_content=sys_form_data_result)
 
@@ -42,7 +41,7 @@ async def get_sys_form_data_by_id(
     return ResponseUtil.success(data=sys_form_data)
 
 
-@sysFormDataController.post('/add', dependencies=[Depends(CheckUserInterfaceAuth('sys:form_data:add'))])
+@sysFormDataController.post('/add')
 @Log(title='sys_form_data', business_type=BusinessType.INSERT)
 async def add_sys_form_data (
     request: Request,

@@ -82,6 +82,15 @@
                 @onColumnWidthChange="onColumnWidthChange"
                 @onSelectionChange="handleSelectionChange"
             >
+                <template #dataCount="{ row }">
+                    <span>
+                        <el-button width="20" round @click="showFormData(row)">
+                            <el-link type="primary">{{
+                                row.dataCount
+                            }}</el-link>
+                        </el-button>
+                    </span>
+                </template>
                 <template #createTime="{ row }">
                     <span>{{ parseTime(row.createTime, '{y}-{m}-{d}') }}</span>
                 </template>
@@ -137,6 +146,13 @@
                 @onFormSave="onFormSave"
             />
         </el-dialog>
+
+        <form-data-dialog
+            v-model="openFormData"
+            width="1000px"
+            :formId="detailFormId"
+            :formName="detailFormName"
+        />
     </div>
 </template>
 
@@ -153,6 +169,7 @@ import TableSetup from '@/components/TableSetup'
 import AutoTable from '@/components/AutoTable'
 import Download from '@/plugins/download'
 import BuildIndex from './BuildIndex.vue'
+import FormDataDialog from './FormDataDialog.vue'
 
 const { proxy } = getCurrentInstance()
 
@@ -165,6 +182,9 @@ const single = ref(true)
 const multiple = ref(true)
 const total = ref(0)
 const title = ref('')
+const openFormData = ref(false)
+const detailFormId = ref(null)
+const detailFormName = ref(null)
 
 const columns = ref([])
 const stripe = ref(true)
@@ -245,7 +265,7 @@ function reset() {
         name: null,
         updateTime: null
     }
-    proxy.resetForm('formRef')
+    // proxy.resetForm('formRef')
 }
 
 /** 搜索按钮操作 */
@@ -376,6 +396,12 @@ function onFormSave(code, formData, formConf, generateConf, drawingList) {
     form.value.drawingList = JSON.stringify(drawingList)
     form.value.name = formConf.remark
     submitForm()
+}
+
+function showFormData(row) {
+    detailFormId.value = row.id
+    detailFormName.value = row.name
+    openFormData.value = true
 }
 
 getColumns()

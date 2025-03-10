@@ -19,7 +19,7 @@ class SysFormDataService:
     """
 
     @classmethod
-    async def get_sys_form_data_list(cls, query_db: AsyncSession, query_object: SysFormDataPageModel, data_scope_sql: str) -> [list | PageResponseModel]:
+    async def get_sys_form_data_list(cls, query_db: AsyncSession, query_object: SysFormDataPageModel, data_scope_sql: str|None) -> [list | PageResponseModel]:
         sys_form_data_list = await SysFormDataDao.get_sys_form_data_list(query_db, query_object, data_scope_sql, is_page=True)
         return sys_form_data_list
 
