@@ -64,6 +64,7 @@
 import { listForm_data } from '@/api/system/form_data'
 import TableSetup from '@/components/TableSetup'
 import AutoTable from '@/components/AutoTable'
+const { proxy } = getCurrentInstance()
 const data = reactive({
     queryParams: {
         pageNum: 1,
@@ -131,5 +132,19 @@ function convertDataList(rows) {
 
 function onOpen() {
     getList()
+}
+
+/** 导出按钮操作 */
+function handleExport() {
+    const params = {
+        formId: props.formId
+    }
+    proxy.download(
+        'sys/form_data/export',
+        {
+            ...params.value
+        },
+        `form_${new Date().getTime()}.xlsx`
+    )
 }
 </script>
