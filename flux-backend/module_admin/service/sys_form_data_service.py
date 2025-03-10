@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-
+import json
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -59,14 +59,14 @@ class SysFormDataService:
     @classmethod
     async def export_sys_form_data_list(cls, query_db: AsyncSession, query_object: SysFormDataPageModel, data_scope_sql) -> bytes:
         sys_form_data_list = await SysFormDataDao.get_sys_form_data_list(query_db, query_object, data_scope_sql, is_page=False)
-        mapping_dict = {
-            'createTime': '创建时间 ',
-            'formData': '表单数据 ',
-            'formId': '表单ID ',
-            'formName': '表单名称 ',
-        }
-        new_data = [
-            {mapping_dict.get(key): value for key, value in item.items() if mapping_dict.get(key)} for item in sys_form_data_list
-        ]
+
+        new_data = []
+        for form_data in sys_form_data_list:
+            content = form_data['formData']
+            content_dict = json.loads(content)
+            item = {}
+            for key, value in content_dict.items():
+                item[key] = value
+            new_data.append(item)
         binary_data = export_list2excel(new_data)
         return binary_data
