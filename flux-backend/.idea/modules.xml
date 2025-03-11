@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/jinqiao-product-fast.iml" filepath="$PROJECT_DIR$/.idea/jinqiao-product-fast.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/flux-backend.iml" filepath="$PROJECT_DIR$/.idea/flux-backend.iml" />
     </modules>
   </component>
 </project>
