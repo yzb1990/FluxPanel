@@ -201,8 +201,8 @@ docker ps
 cd flux-frontend
 
 # 环境配置
-在 .env.development 中，设置 VITE_APP_PROXY_API = http://127.0.0.1/server
-在 .env.production 中，设置 VITE_APP_PROXY_API = /server
+在 .env.development 中，设置 VITE_APP_BASE_API = http://127.0.0.1/server
+在 .env.production 中，设置 VITE_APP_BASE_API = /server
 
 # 安装依赖
 npm config set registry https://registry.npmmirror.com
