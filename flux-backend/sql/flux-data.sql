@@ -14,6 +14,9 @@
  Date: 08/03/2025 17:24:26
 */
 
+CREATE DATABASE IF NOT EXISTS `flux-data`;
+USE `flux-data`;
+
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
 
