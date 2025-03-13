@@ -122,6 +122,7 @@
 
                 <template #image="{ row }">
                     <image-preview
+                        v-if="row.image"
                         :src="fullUrl(row.image)"
                         :width="50"
                         :height="50"
@@ -256,6 +257,7 @@ const columns = ref([])
 const stripe = ref(true)
 const isTable = ref(true)
 const tableHeight = ref(500)
+const fullScreen = ref(false)
 
 const data = reactive({
     form: {},
@@ -424,6 +426,8 @@ function handleExport() {
 //表格全屏
 function onfullTable() {
     proxy.$refs.tSetup.onFull(proxy.$refs.fullTable.$el)
+    fullScreen.value = !fullScreen.value
+    updateTableHeight()
 }
 //表格刷新
 function onRefresh() {
@@ -446,6 +450,34 @@ function onChange(val) {
 function onColumnWidthChange(column) {
     proxy.$refs.tSetup.tableWidth(column)
 }
+
+function updateTableHeight() {
+    if (
+        proxy.$refs.tSetup &&
+        proxy.$refs.queryRef &&
+        document.querySelector('.table-pagination')
+    ) {
+        if (fullScreen.value) {
+            tableHeight.value = window.innerHeight - 115
+        } else {
+            tableHeight.value =
+                window.innerHeight -
+                proxy.$refs.tSetup.$el.clientHeight -
+                proxy.$refs.queryRef.$el.clientHeight -
+                document.querySelector('.table-pagination').clientHeight -
+                220
+        }
+    }
+}
+
+onMounted(() => {
+    updateTableHeight() // 初始化计算高度
+    window.addEventListener('resize', updateTableHeight) // 监听窗口大小变化
+})
+
+onUnmounted(() => {
+    window.removeEventListener('resize', updateTableHeight) // 销毁监听
+})
 
 getColumns()
 </script>
