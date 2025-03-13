@@ -40,15 +40,6 @@
                     @keyup.enter="handleQuery"
                 />
             </el-form-item>
-
-            <el-form-item label="价格" prop="price">
-                <el-input
-                    v-model="queryParams.price"
-                    placeholder="请输入价格"
-                    clearable
-                    @keyup.enter="handleQuery"
-                />
-            </el-form-item>
             <el-form-item>
                 <el-button type="primary" icon="Search" @click="handleQuery"
                     >搜索</el-button
@@ -122,8 +113,8 @@
 
                 <template #image="{ row }">
                     <image-preview
-                        v-if="row.image"
                         :src="fullUrl(row.image)"
+                        v-if="row.image"
                         :width="50"
                         :height="50"
                     />
@@ -228,8 +219,8 @@
         </el-dialog>
     </div>
 </template>
-
-<script setup name="CarDriver">
+  
+  <script setup name="CarDriver">
 import {
     listDriver,
     getDriver,
@@ -266,27 +257,17 @@ const data = reactive({
         pageSize: 10,
         carType: null,
         driverYears: null,
-        name: null,
-        price: null
+        name: null
     },
     rules: {
         age: [{ required: true, message: '年龄不能为空', trigger: 'blur' }],
         carType: [
             { required: true, message: '车辆类型不能为空', trigger: 'change' }
         ],
-        createBy: [
-            { required: true, message: '创建者不能为空', trigger: 'blur' }
-        ],
-        deptId: [
-            { required: true, message: '部门id不能为空', trigger: 'blur' }
-        ],
         driverYears: [
             { required: true, message: '驾龄不能为空', trigger: 'blur' }
         ],
-        name: [
-            { required: true, message: '司机名称不能为空', trigger: 'blur' }
-        ],
-        price: [{ required: true, message: '价格不能为空', trigger: 'blur' }]
+        name: [{ required: true, message: '司机名称不能为空', trigger: 'blur' }]
     }
 })
 
@@ -306,9 +287,8 @@ function getColumns() {
     listAllTable({ tableName: 'car_driver' })
         .then((response) => {
             columns.value = response.data
-            return columns.value
         })
-        .then((data) => {
+        .then(() => {
             getList()
         })
 }
@@ -451,6 +431,7 @@ function onColumnWidthChange(column) {
     proxy.$refs.tSetup.tableWidth(column)
 }
 
+//更新表格高度
 function updateTableHeight() {
     if (
         proxy.$refs.tSetup &&
@@ -458,7 +439,7 @@ function updateTableHeight() {
         document.querySelector('.table-pagination')
     ) {
         if (fullScreen.value) {
-            tableHeight.value = window.innerHeight - 115
+            tableHeight.value = window.innerHeight - 145
         } else {
             tableHeight.value =
                 window.innerHeight -
