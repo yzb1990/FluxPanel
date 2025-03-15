@@ -31,6 +31,8 @@ FluxPanel是一套全部开源的快速开发平台，毫无保留给个人及�
 密码: admin123
 
 
+## 视频简介
+【(开源项目FluxPanel第一期)开源一套python + FastApi + Vue3搭建的管理系统， 支持一键生成代码】 https://www.bilibili.com/video/BV1cjfHYUEPn/?share_source=copy_web&vd_source=5c9c8cbd5bedb60ecbdaa9c9f28d0e78
 
 ## 项目地址
 
