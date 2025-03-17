@@ -12,12 +12,11 @@ commonController = APIRouter(prefix='/common', dependencies=[Depends(LoginServic
 @commonController.post('/upload')
 async def common_upload(request: Request, file: UploadFile = File(...)):
     if OSSConfig.UPLOAD_METHOD == 'oss':
-        upload_result = await CommonService.upload_oss(request, file, oss_folder = "category_image/")
+        upload_result = await CommonService.upload_oss(file, oss_folder = "category_image/")
     else:
-        upload_result = await CommonService.upload_local(request, file)
+        upload_result = await CommonService.upload_local(file)
     logger.info('上传成功')
     return ResponseUtil.success(model_content=upload_result.result)
-
 
 @commonController.get('/download')
 async def common_download(

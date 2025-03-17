@@ -68,6 +68,7 @@
                         v-hasPermi="['car:driver:add']"
                         >新增</el-button
                     >
+
                     <el-button
                         type="success"
                         plain
@@ -85,6 +86,14 @@
                         @click="handleDelete"
                         v-hasPermi="['car:driver:remove']"
                         >删除</el-button
+                    >
+                    <el-button
+                        type="primary"
+                        plain
+                        icon="Upload"
+                        @click="handleImport"
+                        v-hasPermi="['car:driver:import']"
+                        >导入</el-button
                     >
                     <el-button
                         type="warning"
@@ -217,6 +226,14 @@
                 </div>
             </template>
         </el-dialog>
+
+        <!-- 导入数据对话框 -->
+        <ImportData
+            v-if="openImport"
+            v-model="openImport"
+            tableName="car_driver"
+            @success="handleImportSuccess"
+        />
     </div>
 </template>
   
@@ -231,6 +248,8 @@ import {
 import { listAllTable } from '@/api/system/table'
 import TableSetup from '@/components/TableSetup'
 import AutoTable from '@/components/AutoTable'
+import ImportData from '@/components/ImportData'
+import { tr } from 'element-plus/es/locales.mjs'
 const { proxy } = getCurrentInstance()
 const { car_type } = proxy.useDict('car_type')
 
@@ -249,6 +268,8 @@ const stripe = ref(true)
 const isTable = ref(true)
 const tableHeight = ref(500)
 const fullScreen = ref(false)
+
+const openImport = ref(false)
 
 const data = reactive({
     form: {},
@@ -343,6 +364,11 @@ function handleAdd() {
     reset()
     open.value = true
     title.value = '添加司机信息'
+}
+
+/** 新增按钮操作 */
+function handleImport() {
+    openImport.value = true
 }
 
 /** 修改按钮操作 */
@@ -459,6 +485,10 @@ onMounted(() => {
 onUnmounted(() => {
     window.removeEventListener('resize', updateTableHeight) // 销毁监听
 })
+
+function handleImportSuccess() {
+    getList()
+}
 
 getColumns()
 </script>

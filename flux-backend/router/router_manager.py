@@ -7,6 +7,7 @@ from module_admin.controller.common_controller import commonController
 from module_admin.controller.config_controller import configController
 from module_admin.controller.dept_controller import deptController
 from module_admin.controller.dict_controller import dictController
+from module_admin.controller.import_controller import importController
 from module_admin.controller.log_controller import logController
 from module_admin.controller.login_controller import loginController
 from module_admin.controller.job_controller import jobController
@@ -47,6 +48,7 @@ admin_controllers = [
     {'router': sysFormDataController, 'tags': ['系统工具-表单构建']},
     {'router': homeRouter, 'tags': ['产品官网']},
     {'router': carDriverController, 'tags': ['测试业务']},
+    {'router': importController, 'tags': ['导入数据']}
 
 
 

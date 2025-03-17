@@ -18,7 +18,7 @@ class CommonService:
     """
 
     @classmethod
-    async def upload_local(cls, request: Request, file: UploadFile):
+    async def upload_local(cls, file: UploadFile):
         """
         通用上传service
 
@@ -45,16 +45,16 @@ class CommonService:
             return CrudResponseModel(
                 is_success=True,
                 result=UploadResponseModel(
-                    file_name=f'{UploadConfig.UPLOAD_PREFIX}/{relative_path}/{filename}',
-                    new_file_name=filename,
-                    original_filename=file.filename,
+                    fileName=filepath,
+                    newFileName=filename,
+                    originalFilename=file.filename,
                     url=f'{UploadConfig.UPLOAD_PREFIX}/{relative_path}/{filename}',
                 ),
                 message='上传成功',
             )
 
     @classmethod
-    async def upload_oss(cls, request: Request, file: UploadFile, oss_folder):
+    async def upload_oss(cls, file: UploadFile, oss_folder):
         end_point = OSSConfig.ALI_OSS_END_POINT
         access_key_id = OSSConfig.ALI_OSS_KEY
         access_key_secret = OSSConfig.ALI_OSS_SECRET
