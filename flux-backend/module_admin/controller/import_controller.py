@@ -22,4 +22,3 @@ async def upload_excel(request: Request, tableName:str = Form(), file: UploadFil
 
     return ResponseUtil.success(data=result)
 
-

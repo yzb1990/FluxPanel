@@ -48,6 +48,8 @@ class SqlalchemyUtil:
             base_dict.pop('_sa_instance_state', None)
         elif isinstance(obj, dict):
             base_dict = obj.copy()
+        else:
+            return obj
         if transform_case == 'snake_to_camel':
             temp_dict: dict = {}
             for k, v in base_dict.items():

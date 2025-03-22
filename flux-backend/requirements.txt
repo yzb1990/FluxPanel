@@ -23,7 +23,7 @@ uvicorn~=0.32.0
 python-dotenv~=1.0.1
 pydantic-settings~=2.6.1
 jinja2~=3.1.4
-openai==1.55.2
+openai==1.68.0
 markdown==3.7
 oss2==2.18.4
 tinify==1.6.0

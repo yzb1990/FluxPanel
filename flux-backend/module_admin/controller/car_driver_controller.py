@@ -6,6 +6,8 @@ from starlette.requests import Request
 from typing import List
 from config.enums import BusinessType
 from config.get_db import get_db
+from module_admin.entity.vo.import_vo import ImportModel
+from module_admin.service.import_service import ImportService
 from module_admin.service.login_service import LoginService
 from module_admin.aspect.data_scope import GetDataScope
 from module_admin.aspect.interface_auth import CheckUserInterfaceAuth
@@ -93,3 +95,13 @@ async def export_car_driver(
         query_db, car_driver_form, data_scope_sql
     )
     return ResponseUtil.streaming(data=bytes2file_response(export_result))
+
+
+@carDriverController.post('/import', dependencies=[Depends(CheckUserInterfaceAuth('car:driver:import'))])
+async def import_data(request: Request,
+                      import_model: ImportModel,
+                      query_db: AsyncSession = Depends(get_db),
+                      current_user: CurrentUserModel = Depends(LoginService.get_current_user)
+    ):
+    await ImportService.import_data(query_db, import_model, current_user)
+    return ResponseUtil.success()

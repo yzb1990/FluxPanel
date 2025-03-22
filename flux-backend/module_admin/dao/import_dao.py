@@ -1,8 +1,9 @@
-from typing import List
+from typing import List, Dict
 
-from sqlalchemy import text
+from sqlalchemy import text, Table, insert
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from module_admin.entity.vo.import_vo import ImportFieldModel
 from module_gen.entity.vo.gen_table_column_vo import GenTableColumnModel
 
 
@@ -53,3 +54,27 @@ class ImportDao:
                 columnType=row[6]
             ) for row in rows
         ]
+
+    @classmethod
+    async def import_data(cls, session: AsyncSession, table_name: str, field_list: list, value_list: list):
+        """
+        批量插入数据到数据库
+        :param session: db session
+        :param table_name: 数据库表名
+        :param field_list: 字段名列表
+        :param value_list: 多行数据，每一项是字段对应的值（列表）
+        """
+        if not field_list or not value_list:
+            raise ValueError("field_list 和 value_lists 不能为空")
+        if not all(len(field_list) == len(values) for values in value_list):
+            raise ValueError("field_list 和 value_lists 的长度必须一致")
+        # 构造 SQL 语句
+        field_str = ", ".join(field_list)
+        value_placeholders = ", ".join([f":{field}" for field in field_list])
+        sql = f"INSERT INTO {table_name} ({field_str}) VALUES ({value_placeholders})"
+        # 构造参数列表
+        values_dicts = [{field: value for field, value in zip(field_list, values)} for values in value_list]
+        # 批量执行 SQL
+        await session.execute(text(sql), values_dicts)
+        await session.flush()
+        await session.commit()
