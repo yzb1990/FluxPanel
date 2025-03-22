@@ -243,7 +243,8 @@ import {
     getDriver,
     delDriver,
     addDriver,
-    updateDriver
+    updateDriver,
+    importDriver
 } from '@/api/car/driver'
 import { listAllTable } from '@/api/system/table'
 import TableSetup from '@/components/TableSetup'
@@ -486,7 +487,16 @@ onUnmounted(() => {
     window.removeEventListener('resize', updateTableHeight) // 销毁监听
 })
 
-function handleImportSuccess() {
+function handleImportSuccess(filedInfo, fileName) {
+    let data = {
+        tableName: 'car_driver',
+        filedInfo: filedInfo,
+        fileName: fileName
+    }
+    importDriver(data).then(() => {
+        proxy.$modal.msgSuccess('导入成功')
+        getList()
+    })
     getList()
 }
 

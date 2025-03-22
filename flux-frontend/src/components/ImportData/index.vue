@@ -1,8 +1,8 @@
 <template>
     <el-dialog
         v-model="visible"
-        title="上传文件"
-        width="500px"
+        title="导入数据"
+        width="600px"
         @close="handleClose"
     >
         <div>
@@ -27,8 +27,14 @@
             </el-upload>
 
             <el-form v-else :model="targetForm" label-width="80px" ref="form">
+                <el-divider>
+                    <el-text class="mx-1" size="small" type="danger"
+                        >标签为数据表字段，选择列为Excel表字段</el-text
+                    >
+                </el-divider>
+
                 <el-form-item
-                    v-for="column in tableColumns"
+                    v-for="(column, index) in tableColumns"
                     :key="column.name"
                     :label="
                         column.columnComment
@@ -36,17 +42,35 @@
                             : column.columnName
                     "
                 >
-                    <el-select
-                        v-model="targetForm[column.columnName]"
-                        placeholder="请选择列绑定关系"
-                    >
-                        <el-option
-                            v-for="excelCol in excelColumns"
-                            :key="excelCol"
-                            :label="excelCol"
-                            :value="excelCol"
-                        />
-                    </el-select>
+                    <el-row style="flex: 1; width: 100%">
+                        <el-col :span="1">
+                            <el-checkbox
+                                v-model="targetForm[index]['selected']"
+                                :disabled="targetForm[index].isRequired == '1'"
+                            ></el-checkbox>
+                        </el-col>
+                        <el-col :span="15">
+                            <el-select
+                                v-model="targetForm[index]['excelColumn']"
+                                placeholder="请选择列绑定关系"
+                                clearable
+                            >
+                                <el-option
+                                    v-for="excelCol in excelColumns"
+                                    :key="excelCol"
+                                    :label="excelCol"
+                                    :value="excelCol"
+                                />
+                            </el-select>
+                        </el-col>
+                        <el-col :span="1"> </el-col>
+                        <el-col :span="7">
+                            <el-input
+                                v-model="targetForm[index]['defaultValue']"
+                                placeholder="默认值"
+                            ></el-input>
+                        </el-col>
+                    </el-row>
                 </el-form-item>
                 <el-form-item>
                     <el-button type="primary" @click="handleSubmit">
@@ -69,7 +93,8 @@ import { tr } from 'element-plus/es/locales.mjs'
 const excelColumns = ref([]) // Excel 表头
 const tableColumns = ref([]) // 表格列
 
-const targetForm = ref({}) // 表单数据
+const targetForm = ref([]) // 表单数据
+const filename = ref('') // 上传的文件名
 
 const uploadImgUrl = ref(
     import.meta.env.VITE_APP_BASE_API + '/import/uploadExcel'
@@ -104,6 +129,17 @@ const beforeUpload = (file) => {
 }
 
 function handleSubmit() {
+    for (const item in targetForm.value) {
+        if (
+            item['excelColumn'] === '' &&
+            item['defaultValue'] === '' &&
+            item['selected']
+        ) {
+            ElMessage.error('请为勾选的字段选择绑定关系, 或填写默认值')
+            return
+        }
+    }
+    emit('success', targetForm.value, filename.value)
     console.log(targetForm.value)
 }
 
@@ -112,9 +148,16 @@ const handleSuccess = (response) => {
     if (result.code === 200) {
         excelColumns.value = result.data.excelColumns
         tableColumns.value = result.data.tableColumns
-
+        filename.value = result.data.filename
+        targetForm.value = []
         tableColumns.value.forEach((column) => {
-            targetForm.value[column.columnName] = '' // 默认无选择
+            targetForm.value.push({
+                baseColumn: column.columnName,
+                excelColumn: '',
+                defaultValue: '',
+                isRequired: column.isRequired,
+                selected: true
+            })
         })
         showUpload.value = false
     } else {

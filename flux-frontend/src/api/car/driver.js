@@ -42,3 +42,13 @@ export function delDriver(id) {
     method: 'delete'
   })
 }
+
+// 导入司机信息
+export function importDriver(data) {
+    return request({
+      url: '/car/driver/import',
+      method: 'post',
+      data: data
+    })
+  }
+  
