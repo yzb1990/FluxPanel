@@ -17,6 +17,7 @@ from module_admin.controller.online_controller import onlineController
 from module_admin.controller.post_controler import postController
 from module_admin.controller.role_controller import roleController
 from module_admin.controller.server_controller import serverController
+from module_admin.controller.student_info_controller import studentInfoController
 from module_admin.controller.sys_form_controller import sysFormController
 from module_admin.controller.sys_form_data_controller import sysFormDataController
 from module_admin.controller.sys_table_controller import sysTableController
@@ -48,6 +49,7 @@ admin_controllers = [
     {'router': sysFormDataController, 'tags': ['系统工具-表单构建']},
     {'router': homeRouter, 'tags': ['产品官网']},
     {'router': carDriverController, 'tags': ['测试业务']},
+    {'router': studentInfoController, 'tags': ['测试业务']},
     {'router': importController, 'tags': ['导入数据']}
 
 

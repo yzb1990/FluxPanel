@@ -46,9 +46,9 @@ class ImportService:
             value_item = []
             for model in import_model.filed_info:
                 if model.selected: # 已勾选的才能添加
-                    if model.excel_column is None and model.default_value is None:
+                    if not model.excel_column and not model.default_value:
                         raise ServiceException(message='勾选的字段，必须设置列或者添加默认值')
-                    if model.excel_column is not None:
+                    if model.excel_column:
                         value_item.append(excel_item[model.excel_column])
                     else:
                         value_item.append(model.default_value)

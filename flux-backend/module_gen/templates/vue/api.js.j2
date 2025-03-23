@@ -42,3 +42,12 @@ export function del{{BusinessName}}({{pkColumn.pythonField | snake_to_camel}}) {
     method: 'delete'
   })
 }
+
+// 导入{{functionName}}
+export function import{{BusinessName}}(data) {
+    return request({
+      url: '/{{moduleName}}/{{businessName}}/import',
+      method: 'post',
+      data: data
+    })
+}

@@ -101,6 +101,14 @@
                       @click="handleDelete"
                       v-hasPermi="['{{ moduleName }}:{{ businessName }}:remove']"
                     >删除</el-button>
+                  <el-button
+                        type="primary"
+                        plain
+                        icon="Upload"
+                        @click="handleImport"
+                        v-hasPermi="['{{ moduleName }}:{{ businessName }}:import']"
+                        >导入</el-button
+                    >
                     <el-button
                       type="warning"
                       plain
@@ -271,14 +279,22 @@
         </div>
       </template>
     </el-dialog>
+      <!-- 导入数据对话框 -->
+    <ImportData
+        v-if="openImport"
+        v-model="openImport"
+        tableName="{{ tableName }}"
+        @success="handleImportSuccess"
+    />
   </div>
 </template>
 
 <script setup name="{{ tableName|snake_to_pascal_case }}">
-import { list{{ BusinessName }}, get{{ BusinessName }}, del{{ BusinessName }}, add{{ BusinessName }}, update{{ BusinessName }} } from "@/api/{{ moduleName }}/{{ businessName }}";
+import { list{{ BusinessName }}, get{{ BusinessName }}, del{{ BusinessName }}, add{{ BusinessName }}, update{{ BusinessName }}, import{{ BusinessName }} } from "@/api/{{ moduleName }}/{{ businessName }}";
 import { listAllTable } from '@/api/system/table'
 import TableSetup from '@/components/TableSetup'
 import AutoTable from '@/components/AutoTable'
+import ImportData from '@/components/ImportData'
 const { proxy } = getCurrentInstance();
 {% if dicts != '' %}
 {% set dictsNoSymbol = dicts.replace("'", "") %}
@@ -311,6 +327,7 @@ const stripe = ref(true)
 const isTable = ref(true)
 const tableHeight = ref(500)
 const fullScreen = ref(false)
+const openImport = ref(false)
 
 const data = reactive({
   form: {},
@@ -424,6 +441,11 @@ function handleAdd() {
   reset();
   open.value = true;
   title.value = "添加{{ functionName }}";
+}
+
+/** 新增按钮操作 */
+function handleImport() {
+    openImport.value = true
 }
 
 /** 修改按钮操作 */
@@ -575,6 +597,20 @@ function updateTableHeight() {
                 220
         }
     }
+}
+//导入成功
+function handleImportSuccess(filedInfo, fileName) {
+    let data = {
+        tableName: '{{ tableName }}',
+        filedInfo: filedInfo,
+        fileName: fileName
+    }
+    import{{ BusinessName }}(data).then(() => {
+        proxy.$modal.msgSuccess('导入成功')
+        openImport.value = false
+        getList()
+    })
+    getList()
 }
 
 onMounted(() => {

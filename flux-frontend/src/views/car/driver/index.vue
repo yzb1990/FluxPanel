@@ -495,6 +495,7 @@ function handleImportSuccess(filedInfo, fileName) {
     }
     importDriver(data).then(() => {
         proxy.$modal.msgSuccess('导入成功')
+        openImport.value = false
         getList()
     })
     getList()
