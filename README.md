@@ -16,11 +16,11 @@
 FluxPanel是一套全部开源的快速开发平台，毫无保留给个人及企业免费使用。
 
 * 前端采用Vue3、Element Plus，基于<u>[RuoYi-Vue3](https://github.com/yangzongzhuan/RuoYi-Vue3)</u>前端项目修改。
-* 后端采用FastAPI、sqlalchemy、MySQL、Redis、OAuth2 & Jwt, 基于<u>[RuoYi-Vue3-FastAPI](https://github.com/insistence/RuoYi-Vue3-FastAPI)</u>后端项目修改。
+* 后端采用FastAPI、sqlalchemy、MySQL、Redis、OAuth2 & Jwt。
 * 权限认证使用OAuth2 & Jwt，支持多终端认证系统。
 * 支持加载动态权限菜单，多方式轻松权限控制。
 * 支持代码生成，一键生成前后端代码
-* 特别鸣谢：<u>[RuoYi-Vue3](https://github.com/yangzongzhuan/RuoYi-Vue3)， [RuoYi-Vue3-FastAPI](https://github.com/insistence/RuoYi-Vue3-FastAPI)</u>
+* 特别鸣谢：<u>[RuoYi-Vue3](https://github.com/yangzongzhuan/RuoYi-Vue3)</u>
 
 ## 在线体验地址
 
@@ -32,7 +32,11 @@ FluxPanel是一套全部开源的快速开发平台，毫无保留给个人及�
 
 
 ## 视频简介
-【(开源项目FluxPanel第一期)开源一套python + FastApi + Vue3搭建的管理系统， 支持一键生成代码】 https://www.bilibili.com/video/BV1cjfHYUEPn/?share_source=copy_web&vd_source=5c9c8cbd5bedb60ecbdaa9c9f28d0e78
+【FluxPanel第一期】 https://www.bilibili.com/video/BV1cjfHYUEPn
+
+【FluxPanel第二期】 https://www.bilibili.com/video/BV1ftKNeDE1S
+
+【FluxPanel第三期】 https://www.bilibili.com/video/BV1mFQkYeEmu
 
 ## 项目地址
 
@@ -69,7 +73,7 @@ FluxPanel是一套全部开源的快速开发平台，毫无保留给个人及�
 16.  **代码生成：根据mysql数据表的结构，自动生成python代码和vue代码**
 17.  **表字段管理：数据表格字段持久化，界面操作列的宽度，列的排序，显示隐藏等功能**
 18.  **表单构建：表单代码和配置的持久化，自动对接表单填报API，用户填报数据展示、导出功能**
-19.  批量导入数据功能（开发中）
+19.  **数据导入：支持批量导入数据，界面选择Excel列和表字段的对应，支持默认值**
 20.  代码生成支持主子表树表、代码生成后一键导入到项目（开发中）
 
 ## 演示图
