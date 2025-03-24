@@ -3,6 +3,8 @@
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from utils.common_util import CamelCaseUtil, export_list2excel
+from module_admin.entity.vo.sys_table_vo import SysTablePageModel
+from module_admin.service.sys_table_service import SysTableService
 from utils.page_util import PageResponseModel
 from module_admin.dao.student_info_dao import StudentInfoDao
 from module_admin.entity.do.student_info_do import StudentInfo
@@ -48,18 +50,14 @@ class StudentInfoService:
     @classmethod
     async def export_student_info_list(cls, query_db: AsyncSession, query_object: StudentInfoPageModel, data_scope_sql) -> bytes:
         student_info_list = await StudentInfoDao.get_student_info_list(query_db, query_object, data_scope_sql, is_page=False)
-        mapping_dict = {
-            'className': '班级 ',
-            'dateOfBirth': '出生日期 ',
-            'email': '电子邮箱 ',
-            'gender': '性别 ',
-            'major': '专业 ',
-            'name': '姓名 ',
-            'phoneNumber': '联系电话 ',
-            'updateTime': '更新时间 ',
-        }
-        new_data = [
-            {mapping_dict.get(key): value for key, value in item.items() if mapping_dict.get(key)} for item in student_info_list
-        ]
+        filed_list = await SysTableService.get_sys_table_list(query_db, SysTablePageModel(tableName='student_info'), is_page=False)
+        filtered_filed = sorted(filter(lambda x: x["show"] == '1', filed_list), key=lambda x: x["sequence"])
+        new_data = []
+        for item in student_info_list:
+            mapping_dict = {}
+            for fild in filtered_filed:
+                if fild["prop"] in item:
+                    mapping_dict[fild["label"]] = item[fild["prop"]]
+            new_data.append(mapping_dict)
         binary_data = export_list2excel(new_data)
         return binary_data

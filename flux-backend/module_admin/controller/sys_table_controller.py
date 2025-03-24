@@ -33,7 +33,7 @@ async def get_sys_table_list(
 
     return ResponseUtil.success(model_content=sys_table_result)
 
-@sysTableController.get('/listAll', dependencies=[Depends(CheckUserInterfaceAuth('sys:table:list'))])
+@sysTableController.get('/listAll')
 async def get_sys_table_list(
         request: Request,
         query_db: AsyncSession = Depends(get_db),

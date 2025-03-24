@@ -3,6 +3,8 @@
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from utils.common_util import CamelCaseUtil, export_list2excel
+from module_admin.entity.vo.sys_table_vo import SysTablePageModel
+from module_admin.service.sys_table_service import SysTableService
 from utils.page_util import PageResponseModel
 from {{ packageName }}.dao.{{ tableName }}_dao import {{ tableName|snake_to_pascal_case }}Dao
 from {{ packageName }}.entity.do.{{ tableName }}_do import {{ tableName|snake_to_pascal_case }}
@@ -48,15 +50,14 @@ class {{ tableName|snake_to_pascal_case }}Service:
     @classmethod
     async def export_{{ tableName }}_list(cls, query_db: AsyncSession, query_object: {{ tableName|snake_to_pascal_case }}PageModel, data_scope_sql) -> bytes:
         {{ tableName }}_list = await {{ tableName|snake_to_pascal_case }}Dao.get_{{ tableName }}_list(query_db, query_object, data_scope_sql, is_page=False)
-        mapping_dict = {
-            {% for column in columns %}
-            {% if column.isList == "1" %}
-            '{{ column.pythonField | snake_to_camel }}': '{% if column.columnComment != "" %}{{ column.columnComment }} {% else %}{{ column.pythonField }}{% endif %}',
-            {% endif %}
-            {% endfor %}
-        }
-        new_data = [
-            {mapping_dict.get(key): value for key, value in item.items() if mapping_dict.get(key)} for item in {{ tableName }}_list
-        ]
+        filed_list = await SysTableService.get_sys_table_list(query_db, SysTablePageModel(tableName='{{ tableName }}'), is_page=False)
+        filtered_filed = sorted(filter(lambda x: x["show"] == '1', filed_list), key=lambda x: x["sequence"])
+        new_data = []
+        for item in {{ tableName }}_list:
+            mapping_dict = {}
+            for fild in filtered_filed:
+                if fild["prop"] in item:
+                    mapping_dict[fild["label"]] = item[fild["prop"]]
+            new_data.append(mapping_dict)
         binary_data = export_list2excel(new_data)
         return binary_data
