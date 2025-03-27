@@ -28,3 +28,5 @@ markdown==3.7
 oss2==2.18.4
 tinify==1.6.0
 beautifulsoup4==4.12.3
+granian==2.2.0
+uvicorn_worker==0.3.0

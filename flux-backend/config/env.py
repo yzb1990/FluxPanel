@@ -20,6 +20,7 @@ class AppSettings(BaseSettings):
     app_port: int = 9099
     app_version: str = '1.0.0'
     app_reload: bool = True
+    app_workers: int = 5
     app_ip_location_query: bool = True
     app_same_time_login: bool = True
 
@@ -194,7 +195,8 @@ class GetConfig:
             parser = argparse.ArgumentParser(description='命令行参数')
             parser.add_argument('--env', type=str, default='', help='运行环境')
             # 解析命令行参数
-            args = parser.parse_args()
+            # args = parser.parse_args()
+            args, unknown = parser.parse_known_args()
             # 设置环境变量，如果未设置命令行参数，默认APP_ENV为dev
             os.environ['APP_ENV'] = args.env if args.env else 'dev'
         # 读取运行环境

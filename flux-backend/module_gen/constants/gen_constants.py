@@ -47,6 +47,8 @@ class GenConstants:
     # 页面不需要查询字段
     COLUMN_NAME_NOT_QUERY = ["id", "create_by", "dept_id", "create_time", "del_flag", "update_by",
                            "update_time", "remark"]
+
+    DAO_COLUMN_NOT_EDIT = ["create_by", "dept_id", "create_time", "del_flag", "update_time"]
     
     # Entity基类字段
     BASE_ENTITY = ['id', 'create_time', 'update_time', "create_by", "dept_id", 'del_flag']

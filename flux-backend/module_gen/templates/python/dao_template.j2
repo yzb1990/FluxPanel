@@ -5,6 +5,7 @@ from datetime import datetime, time
 from module_admin.entity.do.role_do import SysRoleDept
 from sqlalchemy import and_, delete, desc, func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
+from module_gen.constants.gen_constants import GenConstants
 
 from {{ packageName }}.entity.do.{{ tableName }}_do import {{ tableName|snake_to_pascal_case }}
 from {{ packageName }}.entity.vo.{{ tableName }}_vo import {{ tableName|snake_to_pascal_case }}PageModel, {{ tableName|snake_to_pascal_case }}Model
@@ -83,7 +84,7 @@ class {{ tableName|snake_to_pascal_case }}Dao:
         """
         修改
         """
-        edit_dict_data = edit_model.model_dump(exclude_unset=True)
+        edit_dict_data = edit_model.model_dump(exclude_unset=True, exclude={*GenConstants.DAO_COLUMN_NOT_EDIT})
         await db.execute(update({{ tableName|snake_to_pascal_case }}), [edit_dict_data])
         await db.flush()
         if auto_commit:

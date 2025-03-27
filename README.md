@@ -165,8 +165,16 @@ npm run build:prod 或 yarn build:prod
 # 配置环境
 在.env.prod文件中配置生产环境的数据库和redis
 
-# 运行后端
+# python直接运行后端
 python3 app.py --env=prod
+
+# 或者使用gunicorn
+export APP_ENV=prod 
+gunicorn server:app --workers 17 --worker-class uvicorn_worker.UvicornWorker --bind 0.0.0.0:9099
+
+#或者使用granian（性能更好）
+export APP_ENV=prod 
+granian --interface asgi --workers 17 --runtime-threads 3  server:app --host 0.0.0.0 --port 9099
 ```
 
 ### 方式二： 使用 Docker 一键启动

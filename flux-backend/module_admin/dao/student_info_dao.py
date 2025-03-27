@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from module_admin.entity.do.student_info_do import StudentInfo
 from module_admin.entity.vo.student_info_vo import StudentInfoPageModel, StudentInfoModel
+from module_gen.constants.gen_constants import GenConstants
 from utils.page_util import PageUtil, PageResponseModel
 
 
@@ -65,7 +66,7 @@ class StudentInfoDao:
         """
         修改
         """
-        edit_dict_data = edit_model.model_dump(exclude_unset=True)
+        edit_dict_data = edit_model.model_dump(exclude_unset=True, exclude={*GenConstants.DAO_COLUMN_NOT_EDIT})
         await db.execute(update(StudentInfo), [edit_dict_data])
         await db.flush()
         if auto_commit:
