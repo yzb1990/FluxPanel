@@ -7,6 +7,7 @@ from config.get_db import init_create_table
 from config.get_redis import RedisUtil
 from config.get_scheduler import SchedulerUtil
 from exceptions.handle import handle_exception
+from mcp_server.ai_websocket import init_websocket
 from middlewares.handle import handle_middleware
 from router import router_manager
 
@@ -28,6 +29,10 @@ async def lifespan(app: FastAPI):
     await RedisUtil.init_sys_dict(app.state.redis)
     await RedisUtil.init_sys_config(app.state.redis)
     await SchedulerUtil.init_system_scheduler()
+    await init_websocket(app)
+    # await mcp_starter.start(app)
+    # 挂载子应用
+    handle_sub_applications(app)
     logger.info(f'{AppConfig.app_name}启动成功')
     yield
     await RedisUtil.close_redis_pool(app)
@@ -62,5 +67,4 @@ handle_exception(app)
 
 # 加载路由列表
 app.include_router(router_manager.register_router())
-# 挂载子应用
-handle_sub_applications(app)
+
