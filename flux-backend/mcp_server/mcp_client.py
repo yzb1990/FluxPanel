@@ -37,7 +37,8 @@ class MCPClient:
 
         # 必须设置项目根目录，否则无法获取到其他引用代码文件
         project_root = os.path.abspath(os.getcwd())
-        command = "python" if is_python else "node"
+        python_cmd_path = os.getenv("PYTHON_PATH")
+        command = python_cmd_path if is_python else "node"
         server_params = StdioServerParameters(
             command=command,
             args=[server_script_path],

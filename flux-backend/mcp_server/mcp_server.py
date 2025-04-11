@@ -1,11 +1,7 @@
-import json
-import httpx
-from typing import Any, Literal
 
-from fastapi import Depends
+from typing import Literal
+
 from mcp.server.fastmcp import FastMCP
-from sqlalchemy.ext.asyncio import AsyncSession
-
 
 from tool_table import TableTool
 from tool_weather import WeatherTool
