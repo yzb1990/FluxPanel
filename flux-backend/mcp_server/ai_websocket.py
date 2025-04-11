@@ -4,7 +4,7 @@ from starlette.websockets import WebSocket, WebSocketDisconnect
 from mcp_server.mcp_client import MCPClient
 
 
-async def init_websocket(app: FastAPI):
+async def init_ai_websocket(app: FastAPI):
 
     @app.websocket("/ws/chat")
     async def websocket_endpoint(websocket: WebSocket):

@@ -44,7 +44,7 @@ class DataBaseSettings(BaseSettings):
     db_type: Literal['mysql', 'postgresql'] = 'mysql'
     db_host: str = '127.0.0.1'
     db_port: int = 3306
-    db_username: str = 'root'
+    db_username: str = 'root123'
     db_password: str = 'xxxx'
     db_database: str = 'xxxx'
     db_echo: bool = True

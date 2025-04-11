@@ -1,3 +1,4 @@
+import argparse
 import asyncio
 import os
 import json
@@ -10,8 +11,7 @@ from dotenv import load_dotenv
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 
-# 加载 .env 文件，确保 API Key 受到保护
-load_dotenv()
+
 
 
 class MCPClient:
@@ -39,9 +39,14 @@ class MCPClient:
         project_root = os.path.abspath(os.getcwd())
         python_cmd_path = os.getenv("PYTHON_PATH")
         command = python_cmd_path if is_python else "node"
+
+        parser = argparse.ArgumentParser(description='命令行参数')
+        parser.add_argument('--env', type=str, default='', help='运行环境')
+        args, unknown = parser.parse_known_args()
+
         server_params = StdioServerParameters(
             command=command,
-            args=[server_script_path],
+            args=[server_script_path, f'--env={args.env}'],
             env={"PYTHONPATH": project_root}
         )
 

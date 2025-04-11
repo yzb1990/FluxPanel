@@ -7,7 +7,7 @@ from config.get_db import init_create_table
 from config.get_redis import RedisUtil
 from config.get_scheduler import SchedulerUtil
 from exceptions.handle import handle_exception
-from mcp_server.ai_websocket import init_websocket
+from mcp_server.ai_websocket import init_ai_websocket
 from middlewares.handle import handle_middleware
 from router import router_manager
 
@@ -29,7 +29,7 @@ async def lifespan(app: FastAPI):
     await RedisUtil.init_sys_dict(app.state.redis)
     await RedisUtil.init_sys_config(app.state.redis)
     await SchedulerUtil.init_system_scheduler()
-    await init_websocket(app)
+    await init_ai_websocket(app)
     # await mcp_starter.start(app)
     # 挂载子应用
     handle_sub_applications(app)
