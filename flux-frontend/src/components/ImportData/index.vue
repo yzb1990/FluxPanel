@@ -27,6 +27,24 @@
             </el-upload>
 
             <el-form v-else :model="targetForm" label-width="80px" ref="form">
+                <el-form-item label="选择sheet">
+                    <el-col :span="1">
+                        <el-icon><Files /></el-icon>
+                    </el-col>
+                    <el-col :span="23">
+                        <el-select
+                            v-model="currentSheet"
+                            placeholder="请选择sheet"
+                            @change="handleSheetChange"
+                            ><el-option
+                                v-for="sheet in sheetNames"
+                                :key="sheet"
+                                :label="sheet"
+                                :value="sheet"
+                            />
+                        </el-select>
+                    </el-col>
+                </el-form-item>
                 <el-divider>
                     <el-text class="mx-1" size="small" type="danger"
                         >标签为数据表字段，选择列为Excel表字段</el-text
@@ -90,9 +108,6 @@ import { ElLoading, ElMessage } from 'element-plus'
 import { getToken } from '@/utils/auth'
 import { tr } from 'element-plus/es/locales.mjs'
 
-const excelColumns = ref([]) // Excel 表头
-const tableColumns = ref([]) // 表格列
-
 const targetForm = ref([]) // 表单数据
 const filename = ref('') // 上传的文件名
 
@@ -111,6 +126,11 @@ const emit = defineEmits(['update:modelValue', 'success'])
 
 const visible = ref(true)
 const showUpload = ref(true)
+const currentSheet = ref('') //当前选中的 sheetconst
+const sheetNames = ref([]) // Excel sheet 列表
+const sheetExcelColumns = ref() // Excel 表头
+const tableColumns = ref([]) // 表格列
+const excelColumns = ref([]) // Excel 选择的表头
 
 const handleClose = () => {
     emit('update:modelValue', false) // 关闭 dialog
@@ -128,7 +148,30 @@ const beforeUpload = (file) => {
     return true
 }
 
+const handleSheetChange = async () => {
+    sheetExcelColumns.value.forEach((item) => {
+        if (item.sheetName === currentSheet.value) {
+            excelColumns.value = item.excelColumns || []
+            //更新 targetForm 中的 excelColumn
+            targetForm.value.forEach((formItem, index) => {
+                const matchingExcelCol = excelColumns.value?.find(
+                    (excelCol) =>
+                        excelCol.toLowerCase().trim() ===
+                        tableColumns.value[index].columnComment
+                            .toLowerCase()
+                            .trim()
+                )
+                formItem.excelColumn = matchingExcelCol || ''
+            })
+        }
+    })
+}
+
 function handleSubmit() {
+    const loading = ElLoading.service({
+        text: '导入数据中...',
+        background: 'rgba(0,,0,0.7)'
+    })
     for (const item in targetForm.value) {
         if (
             item['excelColumn'] === '' &&
@@ -139,13 +182,17 @@ function handleSubmit() {
             return
         }
     }
-    emit('success', targetForm.value, filename.value)
+    emit('success', currentSheet.value, targetForm.value, filename.value)
     console.log(targetForm.value)
+    loading.close()
 }
 
 const handleSuccess = (response) => {
     let result = response
     if (result.code === 200) {
+        sheetExcelColumns.value = result.data.sheetExcelColumns
+        sheetNames.value = result.data.sheetNames
+        currentSheet.value = result.data.currentSheet
         excelColumns.value = result.data.excelColumns
         tableColumns.value = result.data.tableColumns
         filename.value = result.data.filename

@@ -599,11 +599,12 @@ function updateTableHeight() {
     }
 }
 //导入成功
-function handleImportSuccess(filedInfo, fileName) {
+function handleImportSuccess(sheetName, filedInfo, fileName) {
     let data = {
         tableName: '{{ tableName }}',
         filedInfo: filedInfo,
-        fileName: fileName
+        fileName: fileName,
+        sheetName: sheetName
     }
     import{{ BusinessName }}(data).then(() => {
         proxy.$modal.msgSuccess('导入成功')

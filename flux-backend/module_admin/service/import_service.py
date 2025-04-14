@@ -1,6 +1,7 @@
 import json
 from datetime import datetime
 
+import numpy as np
 import pandas as pd
 from fastapi import UploadFile, File
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -23,11 +24,23 @@ class ImportService:
     async def analysis_excel(cls, query_db: AsyncSession, table_name: str, file: UploadFile = File(...)):
         upload_result = await CommonService.upload_local(file)
         table_columns = await ImportDao.select_table_columns_by_name(query_db, table_name)
-        excel_columns = pd.read_excel(upload_result.result.file_name, sheet_name=0, engine="openpyxl").columns
-
         edit_columns = [col for col in table_columns if col.column_name not in GenConstants.COLUMN_NAME_NOT_EDIT]
+
+        # 获取所有sheet名称
+        excel_file = pd.ExcelFile(upload_result.result.file_name, engine="openpyxl")
+        sheet_names = excel_file.sheet_names
+
+        sheet_excel_columns = []
+        for sheet_name in sheet_names:
+            excel_columns = pd.read_excel(upload_result.result.file_name, sheet_name=sheet_name, engine="openpyxl").columns
+            sheet_excel_columns.append({
+                "sheet_name": sheet_name, #返回所有sheet名称供前端选择'
+                "excel_columns": list(excel_columns)
+            })
+
         result = {
-            "excel_columns": list(excel_columns),
+            "sheet_names": sheet_names,
+            "sheet_excel_columns": sheet_excel_columns,
             "table_columns": edit_columns,
             "filename": upload_result.result.file_name
         }
@@ -37,8 +50,10 @@ class ImportService:
     async def import_data(cls, query_db: AsyncSession, import_model: ImportModel, current_user: CurrentUserModel):
         field_list = [model.base_column for model in import_model.filed_info if model.selected]
 
-
-        df = pd.read_excel(import_model.file_name, sheet_name=0, dtype=str, engine="openpyxl")
+        sheet_name = import_model.sheet_name if import_model.sheet_name else 0
+        df = pd.read_excel(import_model.file_name, sheet_name=sheet_name, dtype=str, engine="openpyxl")
+        # 替换NaN为None，防止写入数据库报错
+        df.replace(np.nan, None, inplace=True)
         df_dict = df.to_dict(orient="records")
         print(df_dict)
         value_list = []

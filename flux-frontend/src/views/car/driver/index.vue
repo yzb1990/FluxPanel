@@ -487,11 +487,12 @@ onUnmounted(() => {
     window.removeEventListener('resize', updateTableHeight) // 销毁监听
 })
 
-function handleImportSuccess(filedInfo, fileName) {
+function handleImportSuccess(sheetName, filedInfo, fileName) {
     let data = {
         tableName: 'car_driver',
         filedInfo: filedInfo,
-        fileName: fileName
+        fileName: fileName,
+        sheetName: sheetName
     }
     importDriver(data).then(() => {
         proxy.$modal.msgSuccess('导入成功')

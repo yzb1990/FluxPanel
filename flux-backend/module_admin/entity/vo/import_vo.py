@@ -15,6 +15,7 @@ class ImportFieldModel(BaseModel):
 class ImportModel(BaseModel):
     model_config = ConfigDict(alias_generator=to_camel, from_attributes=True)
     table_name: Optional[str] = Field(description='表名')
+    sheet_name: Optional[str] = Field(description='Sheet名')
     filed_info: Optional[list[ImportFieldModel]] = Field(description='字段关联表')
     file_name: Optional[str] = Field(description='文件名')
 
