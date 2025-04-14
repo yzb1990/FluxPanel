@@ -38,6 +38,10 @@ FluxPanel是一套全部开源的快速开发平台，毫无保留给个人及�
 
 【FluxPanel第三期】 https://www.bilibili.com/video/BV1mFQkYeEmu
 
+【FluxPanel第四期】 https://www.bilibili.com/video/BV1o3o2Y3ERn
+
+【FluxPanel第五期】 https://www.bilibili.com/video/BV1ayoVYzETe
+
 ## 项目地址
 
 <table>
@@ -74,7 +78,7 @@ FluxPanel是一套全部开源的快速开发平台，毫无保留给个人及�
 17.  **表字段管理：数据表格字段持久化，界面操作列的宽度，列的排序，显示隐藏等功能**
 18.  **表单构建：表单代码和配置的持久化，自动对接表单填报API，用户填报数据展示、导出功能**
 19.  **数据导入：支持批量导入数据，界面选择Excel列和表字段的对应，支持默认值**
-20.  **大模型AI问答: 基于大模型MCP协议**，可以基于管理系统内部的数据进行咨询，让AI做出总结
+20.  **AI问答: 基于大模型MCP协议 + 数据库**，可以基于**管理系统内部数据**进行咨询，让AI做出总结
 21.  代码生成支持主子表树表、代码生成后一键导入到项目（开发中）
 
 ## 演示图
