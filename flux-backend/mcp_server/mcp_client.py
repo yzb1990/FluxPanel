@@ -95,7 +95,7 @@ class MCPClient:
         content = ''
         yield f'🤖AI：'
         async for chunk in response:
-            # print(chunk)
+            print(chunk)
             if chunk.choices and chunk.choices[0].delta.tool_calls:
                 #调用工具
                 tool_call = chunk.choices[0].delta.tool_calls[0]
@@ -104,8 +104,13 @@ class MCPClient:
                     tool_name = tool_call.function.name
                     tool_call_id = tool_call.id
                     yield f'开始调用工具【{tool_call.function.name}】,参数为'
-                else:
+                    if tool_call.function:
+                        tool_args += tool_call.function.arguments
+                        print(f'tool_args==={tool_args}')
+                        yield tool_call.function.arguments
+                elif tool_call.function:
                     tool_args += tool_call.function.arguments
+                    print(f'tool_args==={tool_args}')
                     yield tool_call.function.arguments
             elif chunk.choices and chunk.choices[0].delta.content:
                 # 大模型解答
