@@ -30,8 +30,7 @@ class {{ tableName|snake_to_pascal_case }}Service:
 
     @classmethod
     async def add_{{ tableName }}(cls, query_db: AsyncSession, query_object: {{ tableName|snake_to_pascal_case }}Model) -> {{ tableName|snake_to_pascal_case }}Model:
-        {{ tableName }} = await {{ tableName|snake_to_pascal_case }}Dao.add_{{ tableName }}(query_db, query_object)
-        {{ tableName }}_model = {{ tableName|snake_to_pascal_case }}Model(**CamelCaseUtil.transform_result({{ tableName }}))
+        {{ tableName }}_model = await {{ tableName|snake_to_pascal_case }}Dao.add_{{ tableName }}(query_db, query_object)
         return {{ tableName }}_model
 
 

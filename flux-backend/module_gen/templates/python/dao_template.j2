@@ -12,6 +12,7 @@ from sqlalchemy.orm import selectinload
 from {{ packageName }}.entity.do.{{ tableName }}_do import {{ tableName|snake_to_pascal_case }}
 from {{ packageName }}.entity.vo.{{ tableName }}_vo import {{ tableName|snake_to_pascal_case }}PageModel, {{ tableName|snake_to_pascal_case }}Model
 from utils.page_util import PageUtil, PageResponseModel
+from utils.common_util import CamelCaseUtil
 
 
 class {{ tableName|snake_to_pascal_case }}Dao:
@@ -73,16 +74,17 @@ class {{ tableName|snake_to_pascal_case }}Dao:
 
 
     @classmethod
-    async def add_{{ tableName }}(cls, db: AsyncSession, add_model: {{ tableName|snake_to_pascal_case }}Model, auto_commit: bool = True) -> {{ tableName|snake_to_pascal_case }}:
+    async def add_{{ tableName }}(cls, db: AsyncSession, add_model: {{ tableName|snake_to_pascal_case }}Model, auto_commit: bool = True) -> {{ tableName|snake_to_pascal_case }}Model:
         """
         增加
         """
         {{ tableName }} =  {{ tableName|snake_to_pascal_case }}(**add_model.model_dump(exclude_unset=True, {% if subTable %}exclude={'{{ subTable.table_name }}_list',}{% endif %}))
         db.add({{ tableName }})
         await db.flush()
+        {{ tableName }}_model = {{ tableName|snake_to_pascal_case }}Model(**CamelCaseUtil.transform_result({{ tableName }}))
         if auto_commit:
             await db.commit()
-        return {{ tableName }}
+        return {{ tableName }}_model
 
     @classmethod
     async def edit_{{ tableName }}(cls, db: AsyncSession, edit_model: {{ tableName|snake_to_pascal_case }}Model, auto_commit: bool = True) -> {{ tableName|snake_to_pascal_case }}:

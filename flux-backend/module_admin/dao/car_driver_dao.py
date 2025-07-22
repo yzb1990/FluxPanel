@@ -10,6 +10,7 @@ from sqlalchemy.orm import selectinload
 from module_admin.entity.do.car_driver_do import CarDriver
 from module_admin.entity.vo.car_driver_vo import CarDriverPageModel, CarDriverModel
 from utils.page_util import PageUtil, PageResponseModel
+from utils.common_util import CamelCaseUtil
 
 
 class CarDriverDao:
@@ -55,16 +56,17 @@ class CarDriverDao:
 
 
     @classmethod
-    async def add_car_driver(cls, db: AsyncSession, add_model: CarDriverModel, auto_commit: bool = True) -> CarDriver:
+    async def add_car_driver(cls, db: AsyncSession, add_model: CarDriverModel, auto_commit: bool = True) -> CarDriverModel:
         """
         增加
         """
         car_driver =  CarDriver(**add_model.model_dump(exclude_unset=True, exclude={'car_info_list',}))
         db.add(car_driver)
         await db.flush()
+        car_driver_model = CarDriverModel(**CamelCaseUtil.transform_result(car_driver))
         if auto_commit:
             await db.commit()
-        return car_driver
+        return car_driver_model
 
     @classmethod
     async def edit_car_driver(cls, db: AsyncSession, edit_model: CarDriverModel, auto_commit: bool = True) -> CarDriver:

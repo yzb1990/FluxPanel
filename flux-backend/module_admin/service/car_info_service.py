@@ -30,8 +30,7 @@ class CarInfoService:
 
     @classmethod
     async def add_car_info(cls, query_db: AsyncSession, query_object: CarInfoModel) -> CarInfoModel:
-        car_info = await CarInfoDao.add_car_info(query_db, query_object)
-        car_info_model = CarInfoModel(**CamelCaseUtil.transform_result(car_info))
+        car_info_model = await CarInfoDao.add_car_info(query_db, query_object)
         return car_info_model
 
 

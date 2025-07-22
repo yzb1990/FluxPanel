@@ -30,8 +30,7 @@ class CarDriverService:
 
     @classmethod
     async def add_car_driver(cls, query_db: AsyncSession, query_object: CarDriverModel) -> CarDriverModel:
-        car_driver = await CarDriverDao.add_car_driver(query_db, query_object)
-        car_driver_model = CarDriverModel(**CamelCaseUtil.transform_result(car_driver))
+        car_driver_model = await CarDriverDao.add_car_driver(query_db, query_object)
         return car_driver_model
 
 

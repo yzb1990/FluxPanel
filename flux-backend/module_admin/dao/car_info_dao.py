@@ -9,6 +9,7 @@ from module_gen.constants.gen_constants import GenConstants
 from module_admin.entity.do.car_info_do import CarInfo
 from module_admin.entity.vo.car_info_vo import CarInfoPageModel, CarInfoModel
 from utils.page_util import PageUtil, PageResponseModel
+from utils.common_util import CamelCaseUtil
 
 
 class CarInfoDao:
@@ -51,16 +52,17 @@ class CarInfoDao:
 
 
     @classmethod
-    async def add_car_info(cls, db: AsyncSession, add_model: CarInfoModel, auto_commit: bool = True) -> CarInfo:
+    async def add_car_info(cls, db: AsyncSession, add_model: CarInfoModel, auto_commit: bool = True) -> CarInfoModel:
         """
         增加
         """
         car_info =  CarInfo(**add_model.model_dump(exclude_unset=True, ))
         db.add(car_info)
         await db.flush()
+        car_info_model = CarInfoModel(**CamelCaseUtil.transform_result(car_info))
         if auto_commit:
             await db.commit()
-        return car_info
+        return car_info_model
 
     @classmethod
     async def edit_car_info(cls, db: AsyncSession, edit_model: CarInfoModel, auto_commit: bool = True) -> CarInfo:
