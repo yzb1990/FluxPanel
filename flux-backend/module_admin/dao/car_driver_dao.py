@@ -2,10 +2,11 @@
 
 from typing import List
 from datetime import datetime, time
-
 from module_admin.entity.do.role_do import SysRoleDept
 from sqlalchemy import and_, delete, desc, func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
+from module_gen.constants.gen_constants import GenConstants
+from sqlalchemy.orm import selectinload
 from module_admin.entity.do.car_driver_do import CarDriver
 from module_admin.entity.vo.car_driver_vo import CarDriverPageModel, CarDriverModel
 from utils.page_util import PageUtil, PageResponseModel
@@ -34,10 +35,14 @@ class CarDriverDao:
 
         query = (
             select(CarDriver)
+            .options(selectinload(CarDriver.car_info_list))
             .where(
+                CarDriver.age == query_object.age if query_object.age else True,
                 CarDriver.car_type == query_object.car_type if query_object.car_type else True,
                 CarDriver.driver_years == query_object.driver_years if query_object.driver_years else True,
-                CarDriver.name.like(f"%{query_object.name}%") if query_object.name else True,
+                CarDriver.image == query_object.image if query_object.image else True,
+                CarDriver.location == query_object.location if query_object.location else True,
+                CarDriver.name == query_object.name if query_object.name else True,
                 CarDriver.price == query_object.price if query_object.price else True,
                 CarDriver.del_flag == '0',
                 eval(data_scope_sql) if data_scope_sql else True,
@@ -54,7 +59,7 @@ class CarDriverDao:
         """
         增加
         """
-        car_driver =  CarDriver(**add_model.model_dump(exclude_unset=True))
+        car_driver =  CarDriver(**add_model.model_dump(exclude_unset=True, exclude={'car_info_list',}))
         db.add(car_driver)
         await db.flush()
         if auto_commit:
@@ -66,7 +71,7 @@ class CarDriverDao:
         """
         修改
         """
-        edit_dict_data = edit_model.model_dump(exclude_unset=True)
+        edit_dict_data = edit_model.model_dump(exclude_unset=True, exclude={ 'car_info_list', *GenConstants.DAO_COLUMN_NOT_EDIT })
         await db.execute(update(CarDriver), [edit_dict_data])
         await db.flush()
         if auto_commit:

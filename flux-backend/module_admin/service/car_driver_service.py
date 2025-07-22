@@ -3,6 +3,8 @@
 from typing import List
 from sqlalchemy.ext.asyncio import AsyncSession
 from utils.common_util import CamelCaseUtil, export_list2excel
+from module_admin.entity.vo.sys_table_vo import SysTablePageModel
+from module_admin.service.sys_table_service import SysTableService
 from utils.page_util import PageResponseModel
 from module_admin.dao.car_driver_dao import CarDriverDao
 from module_admin.entity.do.car_driver_do import CarDriver
@@ -48,18 +50,14 @@ class CarDriverService:
     @classmethod
     async def export_car_driver_list(cls, query_db: AsyncSession, query_object: CarDriverPageModel, data_scope_sql) -> bytes:
         car_driver_list = await CarDriverDao.get_car_driver_list(query_db, query_object, data_scope_sql, is_page=False)
-        mapping_dict = {
-            'age': '年龄 ',
-            'carType': '车辆类型 ',
-            'driverYears': '驾龄 ',
-            'image': '图片 ',
-            'location': '所在位置 ',
-            'name': '司机名称 ',
-            'price': '价格 ',
-            'updateTime': '更新时间 ',
-        }
-        new_data = [
-            {mapping_dict.get(key): value for key, value in item.items() if mapping_dict.get(key)} for item in car_driver_list
-        ]
+        filed_list = await SysTableService.get_sys_table_list(query_db, SysTablePageModel(tableName='car_driver'), is_page=False)
+        filtered_filed = sorted(filter(lambda x: x["show"] == '1', filed_list), key=lambda x: x["sequence"])
+        new_data = []
+        for item in car_driver_list:
+            mapping_dict = {}
+            for fild in filtered_filed:
+                if fild["prop"] in item:
+                    mapping_dict[fild["label"]] = item[fild["prop"]]
+            new_data.append(mapping_dict)
         binary_data = export_list2excel(new_data)
         return binary_data

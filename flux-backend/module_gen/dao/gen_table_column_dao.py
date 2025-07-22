@@ -22,6 +22,16 @@ class GenTableColumnDao:
                        .first())
         return gen_table_column
 
+
+    @classmethod
+    async def get_list_by_table_id(cls, db: AsyncSession, table_id: int) -> list[GenTableColumn]:
+        """根据主键获取单条记录"""
+        gen_table_columns = (((await db.execute(
+                            select(GenTableColumn)
+                            .where(GenTableColumn.table_id == table_id)))
+                       .scalars())
+                       .all())
+        return list(gen_table_columns)
     """
     查询
     """

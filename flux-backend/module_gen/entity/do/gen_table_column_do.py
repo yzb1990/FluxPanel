@@ -2,6 +2,8 @@
 import datetime
 
 from sqlalchemy import Column, ForeignKey, BigInteger, DateTime, Integer, String, text
+from sqlalchemy.orm import relationship
+
 from config.database import BaseMixin, Base
 
 
@@ -10,7 +12,7 @@ class GenTableColumn(Base):
     
     column_id = Column(BigInteger, primary_key=True, nullable=False, autoincrement=True, comment='编号')
     
-    table_id = Column(BigInteger, comment='归属表编号')
+    table_id = Column(Integer, ForeignKey('gen_table.table_id'), nullable=True, comment='归属表编号')
     
     column_name = Column(String(length=200), comment='列名称')
     
@@ -54,4 +56,6 @@ class GenTableColumn(Base):
     create_time = Column(DateTime, nullable=False, default=datetime.datetime.now, comment='创建时间')
     update_time = Column(DateTime, nullable=False, default=datetime.datetime.now,
                          onupdate=datetime.datetime.now, index=True, comment='更新时间')
+
+    tables = relationship('GenTable', back_populates='columns')
     

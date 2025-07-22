@@ -2,6 +2,8 @@
 import datetime
 
 from sqlalchemy import Column, ForeignKey, BigInteger, DateTime, String, text
+from sqlalchemy.orm import relationship
+
 from config.database import Base
 
 
@@ -51,3 +53,5 @@ class GenTable(Base):
     create_time = Column(DateTime, nullable=False, default=datetime.datetime.now, comment='创建时间')
     update_time = Column(DateTime, nullable=False, default=datetime.datetime.now,
                          onupdate=datetime.datetime.now, index=True, comment='更新时间')
+
+    columns = relationship('GenTableColumn', order_by='GenTableColumn.sort', back_populates='tables')

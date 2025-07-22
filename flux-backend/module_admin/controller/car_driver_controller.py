@@ -96,12 +96,14 @@ async def export_car_driver(
     )
     return ResponseUtil.streaming(data=bytes2file_response(export_result))
 
-
 @carDriverController.post('/import', dependencies=[Depends(CheckUserInterfaceAuth('car:driver:import'))])
-async def import_data(request: Request,
+async def import_car_driver(request: Request,
                       import_model: ImportModel,
                       query_db: AsyncSession = Depends(get_db),
                       current_user: CurrentUserModel = Depends(LoginService.get_current_user)
     ):
+    """
+    导入数据
+    """
     await ImportService.import_data(query_db, import_model, current_user)
     return ResponseUtil.success()

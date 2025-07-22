@@ -17,7 +17,7 @@ gen1Controller = APIRouter(prefix="/tool/gen", tags=["代码生成"], dependenci
 async def gen_list(request: Request,
                    gen_table: GenTablePageModel = Depends(GenTablePageModel.as_query),
                    query_db: AsyncSession = Depends(get_db),
-                   data_scope_sql: str = Depends(GetDataScope('SysDept')),):
+                   data_scope_sql: str = Depends(GetDataScope('SysDept'))):
     """查询代码生成列表"""
     table_list = await GenTableService.select_gen_table_list(gen_table, query_db, data_scope_sql)
     return ResponseUtil.success(model_content=table_list)

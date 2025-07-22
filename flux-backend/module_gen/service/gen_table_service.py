@@ -104,12 +104,12 @@ class GenTableService:
     async def update_gen_table(cls, query_db, gen_table: GenTableModel) -> None:
         """业务信息"""
         columns_dicts = gen_table.columns
-        columns = [GenTableColumnModel(**columns_dict) for columns_dict in columns_dicts]
+        # columns = [GenTableColumnModel(**columns_dict) for columns_dict in columns_dicts]
 
         gen_table.options = json.dumps(gen_table.params)
         await GenTableDao.edit_gen_table(query_db, gen_table)
-        if columns:
-            for column in columns:
+        if gen_table.columns:
+            for column in gen_table.columns:
                 column.table_id = gen_table.table_id
                 await GenTableColumnDao.edit_gen_table_column(query_db, column, exclude_unset=False)
 

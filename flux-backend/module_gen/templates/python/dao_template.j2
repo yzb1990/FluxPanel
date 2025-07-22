@@ -6,7 +6,9 @@ from module_admin.entity.do.role_do import SysRoleDept
 from sqlalchemy import and_, delete, desc, func, or_, select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from module_gen.constants.gen_constants import GenConstants
-
+{% if subTable %}
+from sqlalchemy.orm import selectinload
+{% endif %}
 from {{ packageName }}.entity.do.{{ tableName }}_do import {{ tableName|snake_to_pascal_case }}
 from {{ packageName }}.entity.vo.{{ tableName }}_vo import {{ tableName|snake_to_pascal_case }}PageModel, {{ tableName|snake_to_pascal_case }}Model
 from utils.page_util import PageUtil, PageResponseModel
@@ -35,6 +37,9 @@ class {{ tableName|snake_to_pascal_case }}Dao:
 
         query = (
             select({{ tableName|snake_to_pascal_case }})
+            {% if subTable %}
+            .options(selectinload({{ tableName|snake_to_pascal_case }}.{{ subTable.table_name }}_list))
+            {% endif %}
             .where(
                 {% for column in columns %}
                 {% if column.isQuery == "1" %}
@@ -72,7 +77,7 @@ class {{ tableName|snake_to_pascal_case }}Dao:
         """
         增加
         """
-        {{ tableName }} =  {{ tableName|snake_to_pascal_case }}(**add_model.model_dump(exclude_unset=True))
+        {{ tableName }} =  {{ tableName|snake_to_pascal_case }}(**add_model.model_dump(exclude_unset=True, {% if subTable %}exclude={'{{ subTable.table_name }}_list',}{% endif %}))
         db.add({{ tableName }})
         await db.flush()
         if auto_commit:
@@ -84,7 +89,7 @@ class {{ tableName|snake_to_pascal_case }}Dao:
         """
         修改
         """
-        edit_dict_data = edit_model.model_dump(exclude_unset=True, exclude={*GenConstants.DAO_COLUMN_NOT_EDIT})
+        edit_dict_data = edit_model.model_dump(exclude_unset=True, exclude={ {% if subTable %}'{{ subTable.table_name }}_list', {% endif %}*GenConstants.DAO_COLUMN_NOT_EDIT })
         await db.execute(update({{ tableName|snake_to_pascal_case }}), [edit_dict_data])
         await db.flush()
         if auto_commit:

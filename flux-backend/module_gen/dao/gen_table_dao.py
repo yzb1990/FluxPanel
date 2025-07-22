@@ -6,6 +6,8 @@ from typing import List
 from sqlalchemy import and_, delete, desc, func, or_, select, update, MetaData, text, not_, Table, Column, String, \
     DateTime
 from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.orm import selectinload
+
 from module_gen.entity.do.gen_table_do import GenTable
 from module_gen.entity.vo.gen_table_vo import GenTablePageModel, GenTableModel
 from utils.common_util import CamelCaseUtil
@@ -29,6 +31,7 @@ class GenTableDao:
         """根据名称获取单条记录"""
         gen_table = (((await db.execute(
                             select(GenTable)
+                            .options(selectinload(GenTable.columns))
                             .where(GenTable.table_name == table_name)))
                        .scalars())
                        .first())
@@ -45,6 +48,7 @@ class GenTableDao:
 
         query = (
             select(GenTable)
+            .options(selectinload(GenTable.columns))
             .where(
                 
                 GenTable.table_id == query_object.table_id if query_object.table_id else True,
@@ -103,7 +107,7 @@ class GenTableDao:
         """
         增加
         """
-        gen_table =  GenTable(**add_model.model_dump(exclude_unset=True))
+        gen_table = GenTable(**add_model.model_dump(exclude_unset=True, exclude={'sub', 'tree', 'crud'}))
         db.add(gen_table)
         await db.flush()
         return gen_table

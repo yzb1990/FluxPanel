@@ -45,7 +45,7 @@ class VelocityUtils:
             # 子表信息
             sub_table = await GenTableDao.get_by_table_name(query_db, gen_table.sub_table_name)
             # 设置主子表信息
-            # await cls.set_sub_table_value(query_db, gen_table, sub_table)
+            await cls.set_sub_table_value(query_db, gen_table, sub_table)
         
         # 设置主键列信息
         table_columns_dicts = await GenTableColumnDao.get_gen_table_column_list(query_db, GenTableColumnPageModel(tableId=gen_table.table_id))
@@ -101,25 +101,25 @@ class VelocityUtils:
             "dicts": cls.get_column_related_dicts(table_columns),
         }
         
-        # if gen_table.tpl_category == "tree":
-        #     context.update({
-        #         "treeCode": gen_table.tree_code,
-        #         "treeParentCode": gen_table.tree_parent_code,
-        #         "treeName": gen_table.tree_name,
-        #         "expandColumn": gen_table.tree_name,
-        #         "tree_parent_code": gen_table.tree_parent_code,
-        #         "tree_name": gen_table.tree_name
-        #     })
+        if gen_table.tpl_category == "tree":
+            context.update({
+                "treeCode": gen_table.tree_code,
+                "treeParentCode": gen_table.tree_parent_code,
+                "treeName": gen_table.tree_name,
+                "expandColumn": gen_table.tree_name,
+                "tree_parent_code": gen_table.tree_parent_code,
+                "tree_name": gen_table.tree_name
+            })
         
-        # if gen_table.tpl_category == "sub":
-        #     context.update({
-        #         "subTable": sub_table,
-        #         "subTableName": gen_table.sub_table_name,
-        #         "subTableFkName": gen_table.sub_table_fk_name,
-        #         "subClassName": sub_table.class_name,
-        #         "subclassName": sub_table.class_name.lower(),
-        #         "subImportList": cls.get_import_list(sub_table, table_columns)
-        #     })
+        if gen_table.tpl_category == "sub":
+            context.update({
+                "subTable": sub_table,
+                "subTableName": gen_table.sub_table_name,
+                "subTableFkName": gen_table.sub_table_fk_name,
+                "subClassName": sub_table.class_name,
+                "subclassName": sub_table.class_name.lower(),
+                "subImportList": cls.get_import_list(sub_table.columns)
+            })
         
         return context
     
@@ -128,15 +128,14 @@ class VelocityUtils:
         """获取权限前缀"""
         return f"{module_name}:{business_name}"
     
-    # @classmethod
-    # async def set_sub_table_value(cls, query_db, gen_table: GenTable, sub_table: GenTable):
-    #     """设置主子表信息"""
-    #     table_columns = await GenTableColumnDao.get_gen_table_column_list(query_db, GenTableColumnPageModel(
-    #         tableId=sub_table.table_id))
-    #     for column in table_columns:
-    #         if column.is_pk == "1":
-    #             gen_table.pk_column = column
-    #             break
+    @classmethod
+    async def set_sub_table_value(cls, query_db, gen_table: GenTableModel, sub_table: GenTable):
+        """设置主子表信息"""
+        table_columns = await GenTableColumnDao.get_list_by_table_id(query_db, sub_table.table_id)
+        for column in table_columns:
+            if column.is_pk == "1":
+                gen_table.pk_column = column
+                break
     
     @classmethod
     def get_import_list(cls, table_columns: List[GenTableColumnModel]) -> str:

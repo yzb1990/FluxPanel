@@ -9,7 +9,7 @@
                         @change="tplSelectChange"
                     >
                         <el-option label="单表（增删改查）" value="crud" />
-                        <el-option label="树表（增删改查）" value="tree" />
+                        <!-- <el-option label="树表（增删改查）" value="tree" /> -->
                         <el-option label="主子表（增删改查）" value="sub" />
                     </el-select>
                 </el-form-item>
@@ -19,10 +19,10 @@
                 <el-form-item prop="tplWebType">
                     <template #label>前端类型</template>
                     <el-select v-model="info.tplWebType">
-                        <el-option
+                        <!-- <el-option
                             label="Vue2 Element UI 模版"
                             value="element-ui"
-                        />
+                        /> -->
                         <el-option
                             label="Vue3 Element Plus 模版"
                             value="element-plus"
