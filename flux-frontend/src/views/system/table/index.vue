@@ -121,12 +121,19 @@
                 </template>
             </el-table-column>
 
-            <el-table-column label="固定表头" align="center" prop="fixed">
+            <el-table-column label="固定列" align="center" prop="fixed">
                 <template #default="scope">
-                    <dict-tag
+                    {{
+                        scope.row.fixed == 0
+                            ? 'No'
+                            : scope.row.fixed == 1
+                            ? 'Left'
+                            : 'Right'
+                    }}
+                    <!-- <dict-tag
                         :options="sys_01_yes_no"
                         :value="scope.row.fixed"
-                    />
+                    /> -->
                 </template>
             </el-table-column>
 
@@ -240,16 +247,25 @@
                     />
                 </el-form-item>
 
-                <el-form-item label="固定表头" prop="fixed">
+                <el-form-item label="固定列" prop="fixed">
                     <el-select
                         v-model="form.fixed"
-                        placeholder="请选择固定表头"
+                        placeholder="请选择固定方向"
                     >
                         <el-option
-                            v-for="dict in sys_01_yes_no"
-                            :key="dict.value"
-                            :label="dict.label"
-                            :value="dict.value"
+                            :key="0"
+                            label="不固定"
+                            value="0"
+                        ></el-option>
+                        <el-option
+                            :key="1"
+                            label="左侧固定"
+                            value="1"
+                        ></el-option>
+                        <el-option
+                            :key="2"
+                            label="右侧固定"
+                            value="2"
                         ></el-option>
                     </el-select>
                 </el-form-item>
