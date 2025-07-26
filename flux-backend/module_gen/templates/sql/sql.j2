@@ -33,4 +33,4 @@ values('{{functionName}}导入', @parentId, '6',  '#', '', 1, 0, 'F', '0', '0', 
 INSERT INTO `sys_table` (`table_name`, `field_name`, `prop`, `label`, `sequence`) VALUES ('{{ tableName }}', '{{ column.pythonField }}', '{{ pythonField }}', '{{ comment }}', {{ loop.index0 }});
 {% endif %}
 {% endfor %}
-INSERT INTO `sys_table` (`table_name`, `field_name`, `prop`, `label`, `sequence`) VALUES ('{{ tableName }}', 'operate', 'operate', '操作', {{ columns|length }});
+INSERT INTO `sys_table` (`table_name`, `field_name`, `prop`, `label`, `sequence`, `fixed`) VALUES ('{{ tableName }}', 'operate', 'operate', '操作', {{ columns|length }}, '2');
