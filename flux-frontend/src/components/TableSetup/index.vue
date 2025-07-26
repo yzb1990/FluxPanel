@@ -117,20 +117,7 @@
                                                     </el-radio-button>
                                                 </el-radio-group>
                                             </el-tooltip>
-                                            <el-tooltip
-                                                effect="dark"
-                                                content="固定表头"
-                                                placement="top"
-                                            >
-                                                <el-switch
-                                                    :key="element.id"
-                                                    v-model="element.fixed"
-                                                    active-value="1"
-                                                    inactive-value="0"
-                                                    @change="onSwitch(element)"
-                                                >
-                                                </el-switch>
-                                            </el-tooltip>
+
                                             <el-tooltip
                                                 effect="dark"
                                                 content="是否排序"
@@ -159,6 +146,33 @@
                                                 >
                                                 </el-switch>
                                             </el-tooltip>
+
+                                            <el-tooltip
+                                                effect="dark"
+                                                content="固定列"
+                                                placement="top"
+                                            >
+                                                <el-radio-group
+                                                    v-model="element.fixed"
+                                                    size="small"
+                                                    @change="onSwitch(element)"
+                                                >
+                                                    <el-radio-button value="1">
+                                                        <svg-icon
+                                                            class-name="size-icon"
+                                                            icon-class="leftCenter"
+                                                    /></el-radio-button>
+                                                    <el-radio-button value="0"
+                                                        ><svg-icon
+                                                            class-name="size-icon"
+                                                            icon-class="alignCenter"
+                                                    /></el-radio-button>
+                                                    <el-radio-button value="2">
+                                                        <svg-icon
+                                                            class-name="size-icon"
+                                                            icon-class="rightCenter"
+                                                    /></el-radio-button> </el-radio-group
+                                            ></el-tooltip>
                                         </div>
                                     </template>
                                     <!-- <transition-group>

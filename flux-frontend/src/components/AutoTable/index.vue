@@ -22,7 +22,7 @@
                 :label="item.label"
                 :sortable="item.sortable != 0"
                 :width="item.width"
-                :fixed="item.fixed != 0"
+                :fixed="parseFixed(item.fixed)"
                 :show-overflow-tooltip="item.tooltip != 0"
             >
                 <template #default="scope" v-if="$slots[item.prop]">
@@ -92,12 +92,20 @@ export default {
             emit('onSelectionChange', selection)
         }
 
+        const parseFixed = (value) => {
+            if (value === '0') return false
+            if (value === '1') return 'left' // 如果需要的话
+            if (value === '2') return 'right'
+            return value // 'left' 或 'right'
+        }
+
         return {
             stripe,
             sonColumns,
             loading,
             sonTableData,
             tableHeight,
+            parseFixed,
             headerDragend,
             handleSelectionChange
         }
