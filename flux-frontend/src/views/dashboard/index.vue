@@ -2,12 +2,12 @@
     <div>
         <div class="pageHeaderContent">
             <div class="avatar">
-                <a-avatar size="large" :src="currentUser.avatar" />
+                <a-avatar size="large" :src=fullUrl(user.avatar) />
             </div>
             <div class="content">
                 <div class="contentTitle">
-                    早安，
-                    {{ currentUser.name }}
+                    你好，
+                    {{ user.name }}
                     ，祝你开心每一天！
                 </div>
                 <div>{{ currentUser.title }} |{{ currentUser.group }}</div>
@@ -213,7 +213,9 @@ import {
     Avatar
 } from 'ant-design-vue'
 import 'ant-design-vue/dist/reset.css'
-
+import useUserStore from '@/store/modules/user'
+const user = useUserStore()
+console.log(user)
 export default {
     components: {
         AStatistic: Statistic,
